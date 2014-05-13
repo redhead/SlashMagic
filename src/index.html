@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+	<head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        
+		<title>SlashMagic</title>
+
+        <style>
+            body {
+                padding-top: 60px;
+                padding-bottom: 40px;
+            }
+        </style>
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="lib/angular-ui/build/angular-ui.min.css">
+
+        <script src="lib/jquery/dist/jquery.js"></script>
+
+        <script src="lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="js/vendor/jquery.bootstrap-growl.min.js"></script>
+
+        <script src="lib/angular/angular.js"></script>
+        <script src="lib/angular-ui/build/angular-ui.min.js"></script>
+        <script src="lib/angular-i18n/angular-locale_cs-cz.js"></script>
+
+        <script src="js/vendor/cycle.js"></script>
+        <script src="js/vendor/json2.js"></script>
+
+        <script src="js/all.js"></script>
+    </head>
+    <body ng-controller="MainController">
+
+        <script type="text/ng-template" id="damageFatigueBars.html">
+			@@include('src/damageFatigueBars.html')
+        </script>
+
+        <div ng-controller="SelectArmorController" id="selectArmorModal" class="fade modal hide in">
+			@@include('src/selectArmorForm.html')
+        </div>
+
+        <div ng-controller="NewCharacterController" id="createCharacterModal" class="fade modal hide in">
+			@@include('src/createCharacterForms.html')
+        </div>
+
+
+        @@include('src/menu.html')
+
+        <div class="container">
+            <div class="jumbotron">
+                <h1>
+                    {{character.name}}
+                </h1>
+                <h3>{{character.race}}, {{character.profession}} <span data-gender-icon data-character="character"></span></h3>
+                <p>{{character.background}}</p>
+            </div>
+
+            @@include('src/attrPopup.html')
+
+            <h3>Vlastnosti</h3>
+            <div class="row">
+                <table class="table span2">
+					<tr attr-row ng-repeat="attr in ['sil', 'obr', 'zrc']"></tr>
+                </table>
+                <table class="table span2">
+					<tr attr-row ng-repeat="attr in ['vol', 'int', 'chr']"></tr>
+                </table>
+                <table class="table span2">
+					<tr attr-row ng-repeat="attr in ['odl', 'vdr', 'rch', 'sms']"></tr>
+                </table>
+                <table class="table span2">
+					<tr attr-row ng-repeat="attr in ['krs', 'nbz', 'dst']"></tr>
+                </table>
+                <table class="table span2">
+					<tr attr-row ng-repeat="attr in ['vel', 'hmt', 'vys']"></tr>
+                </table>
+            </div>
+
+            <h3>Boj</h3>
+			<div ng-controller="CombatController">
+				<div ng-controller="SelectArmorController" id="selectArmorModal" class="fade modal hide in">
+					<div ng-include="selectArmorController.html"></div>
+				</div>
+				
+				<div class="row">
+					<table class="table span2">
+						<tr attr-row ng-repeat="attr in ['boj', 'utok', 'strelba', 'obrana']"></tr>
+					</table>
+					
+					<div class="col-sm-3 col-md-3">
+						Zbroj: {{armor.protection}} / {{helmet.protection}}
+						<ul class="list-unstyled">
+							<li>
+								{{armor.name}}
+								<a href="#selectArmorModal" class="btn btn-default btn-sm" data-toggle="modal" ng-click="selectArmorType = 'armor'">Vybrat zbroj</a>
+							</li>
+							<li>
+								{{helmet.name}}
+								<a href="#selectArmorModal" class="btn btn-default btn-sm" data-toggle="modal" ng-click="selectArmorType = 'helmet'">Vybrat přilbu</a>
+							</li>
+						</ul>
+					</div>
+					
+					
+				</div>
+			</div>
+
+            <div data-damage-fatigue-bars data-type="damage"></div>
+
+            <h3>Na cesty</h3>
+            <div data-damage-fatigue-bars data-type="fatigue"></div>
+
+            <hr>
+
+            <footer>
+                <p>© Radek Ježdík 2012</p>
+            </footer>
+
+        </div>
+    
+	</body>
+</html>
