@@ -1,0 +1,66 @@
+<form ng-controller="NewCharacterAttrsController" name="createForm2" ng-show="part == 1" class="form-horizontal modal-form">
+	<div class="modal-header">
+		<h3>Vlastnosti</h3>
+	</div>
+	<div class="modal-body attrs-modal-body">
+		<table>
+			<tr class="divider-2">
+				<td>
+					<table class="table table-condensed table-hover">
+						<tr ng-repeat="attr in getBaseAttrs()" ng-class="{info: isMainAttr(attr)}">
+							<td>{{getLongName(attr)}}</td>
+							<td>{{newCharacter.attributes[attr] | attr}}</td>
+							<td>
+								<div class="pull-right" ng-hide="random">
+									<a href ng-click="increase(attr)"><i class="icon-chevron-up"></i></a>
+									<a href ng-click="decrease(attr)"><i class="icon-chevron-down"></i></a>
+								</div>
+							</td>
+							<td ng-hide="random">{{remaining[attr]}}</td>
+						</tr>
+					</table>
+					<div ng-hide="newCharacter.male">
+						<div class="checkbox">
+							<label for="genderCorrections">
+								<input ng-model="useGenderCorrections" type="checkbox" id="genderCorrections"> Opravy za pohlaví
+							</label>
+						</div>
+					</div>
+				</td>
+				<td>
+					<div class="pagination-centered">
+						<div class="btn-group">
+							<button ng-class="{active: !random}" class="btn btn-default" ng-click="toggleRandom()">Rozhodnutí hráče</button>
+							<button ng-class="{active: random}" class="btn btn-default" ng-click="toggleRandom()">Náhoda</button>
+						</div>
+					</div>
+					<hr>
+					<div ng-show="random" class="pagination-centered">
+						<button class="btn btn-default" ng-click="generate()">
+							<i class="icon-random"></i> Hodit kostkami
+						</button>
+					</div>
+					<div ng-hide="random" class="pagination-centered">
+						<table>
+							<tr>
+								<th>Hlavní body</th>
+								<th>Vedlejší body</th>
+								<th>Max. k jedné vedlejší</th>
+							</tr>
+							<tr>
+								<td>{{remainingMain}}</td>
+								<td>{{remainingSecondary}}</td>
+								<td>{{uniqeness}}</td>
+							</tr>
+						</table>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="modal-footer">
+		<a href="" class="btn btn-default" data-dismiss="modal">Zavřít</a>
+		<button class="btn btn-default" ng-click="goto(0)">Zpět</button>
+		<button class="btn btn-primary" ng-click="goto(2)">Další</button>
+	</div>
+</form>

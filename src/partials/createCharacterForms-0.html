@@ -1,0 +1,43 @@
+<form name="createForm1" ng-show="part == 0" class="form-horizontal modal-form">
+	<div class="modal-header">
+		<h3>Nová postava</h3>
+	</div>
+	<div class="modal-body">
+		<div class="form-group">
+			<label class="control-label">Jméno postavy:</label>
+			<div class="controls">
+				<input ng-model="newCharacter.name" required type="text" class="span3 form-control">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label">Rasa:</label>
+			<div class="controls">
+				<select ng-model="newCharacter.race" ng-options="r for r in races" class="span2"></select>
+				<span class="btn-group">
+					<button type="button" ng-click="newCharacter.male=true" ng-class="{active: newCharacter.male}" class="btn btn-default">♂ muž</button>
+					<button type="button" ng-click="newCharacter.male=false" ng-class="{active: !newCharacter.male}" class="btn btn-default">♀ žena</button>
+				</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label">Povolání:</label>
+			<div class="controls">
+				<select ng-model="newCharacter.profession" ng-options="p for p in professions" class="span2"></select>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label">Vyjímečnost:</label>
+			<div class="controls">
+				<div class="btn-group" data-toggle="buttons-radio">
+					<button type="button" ng-click="uniqeness=3" ng-class="{active: uniqeness==3}" class="btn btn-default">Vlastnosti</button>
+					<button type="button" ng-click="uniqeness=2" ng-class="{active: uniqeness==2}" class="btn btn-default">Vlastnosti i zázemí</button>
+					<button type="button" ng-click="uniqeness=1" ng-class="{active: uniqeness==1}" class="btn btn-default">Zázemí</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<a href="" class="btn btn-default" data-toggle="modal" data-target="#createCharacterModal">Zavřít</a>
+		<button class="btn btn-primary" ng-disabled="!createForm1.$valid" ng-click="goto(1)">Další</button>
+	</div>
+</form>

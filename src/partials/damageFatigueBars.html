@@ -1,0 +1,47 @@
+
+<div class="form-inline">
+	<span ui:if="type == 'damage'">Mez zranění:</span>
+	<span ui:if="type == 'fatigue'">Mez únavy:</span>
+	{{getLimit(type)}}
+
+	<table class="progress-bars">
+		<tr>
+			<td width="{{getLimit(type) * 20}}">
+				<div class="progress">
+					<div class="progress-bar progress-bar-success" style="width: {{getPercent(type, 1)}}%;"></div>
+				</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>
+				<div class="progress">
+					<div class="progress-bar progress-bar-warning" style="width: {{getPercent(type, 2)}}%;"></div>
+				</div>
+			</td>
+			<td>Postih</td>
+		</tr>
+		<tr>
+			<td>
+				<div class="progress">
+					<div class="progress-bar progress-bar-danger" style="width: {{getPercent(type, 3)}}%;"></div>
+				</div>
+			</td>
+			<td>Vyřazení</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>Smrt</td>
+		</tr>
+	</table>
+
+	<div class="controls">
+		<label ui:if="type == 'damage'" for="damageSpinner">Zranění:</label>
+		<label ui:if="type == 'fatigue'" for="fatigueSpinner">Únava:</label>
+		<div class="input-append">
+			<input id="{{type}}Spinner" type="number" min="0" max="{{getLimit(type) * 3}}" ng-model="character[type]" class="span1">
+			<button type="button" class="btn" ng-show="character[type] >= getLimit(type)" ng-click="rollPenalty(type)" ng-disabled="!isRollEnabled[type]">Hod na postih</button>
+		</div>
+	</div>
+	<div ng-show="character[type] >= getLimit(type)">Postih: <span ng-class="{red: character.penalties[type] < 0}">{{character.penalties[type] | attr}}</span></div>
+</div>
