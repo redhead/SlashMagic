@@ -1,0 +1,50 @@
+
+<div class="modal-header">
+	<h4 class="modal-title">Předměty</h4>
+</div>
+<div class="modal-body">
+	<div class="row">
+		<div class="item-list">
+			<div class="left-inner-addon">
+				<span class="glyphicon glyphicon-search"></span>
+				<input type="text" ng-model="search.name" class="form-control" />
+			</div>
+			<div class="item-table">
+				<table class="table table-condensed table-hover">
+					<tr ng-repeat="item in items | filter: search" ng-click="select(item)" ng-class="{info: item.name == selectedItem.name}">
+						<td>
+							{{item.name}}
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		
+		<div class="item-detail" ng-show="selectedItem !== null">
+			<h3>{{selectedItem.name}}</h3>
+			<table>
+				<tr>
+					<th>Váha:</th>
+					<td>{{selectedItem.weight}} kg</td>
+				</tr>
+				<tr>
+					<th>Cena:</th>
+					<td><span data-gold data-count="selectedItem.price"></span></td>
+				</tr>
+			</table>
+			Kusů: <input type="number" ng-model="model.count" step="1" min="1" />
+			<br>
+			<label><input type="checkbox" ng-model="model.payForItem" />Zaplatit za předmět</label>
+			<br>
+			Cena / ks: <input type="number" ng-model="model.price" ng-disabled="!model.payForItem" min="0" />
+			<br>
+			Celkem: <span data-gold data-count="model.count * model.price"></span>
+			<br>
+			Vlastní název: <input type="text" ng-model="model.userItemName" />
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="ok()" ng-show="selectedItem">Vybrat</button>
+	<button class="btn btn-default" ng-click="close()">Zavřít</button>
+</div>

@@ -1,7 +1,5 @@
+
 <form ng-controller="NewCharacterAttrsController" name="createForm2" ng-show="part == 1" class="form-horizontal modal-form">
-	<div class="modal-header">
-		<h3>Vlastnosti</h3>
-	</div>
 	<div class="modal-body attrs-modal-body">
 		<table>
 			<tr class="divider-2">
@@ -12,8 +10,8 @@
 							<td>{{newCharacter.attributes[attr] | attr}}</td>
 							<td>
 								<div class="pull-right" ng-hide="random">
-									<a href ng-click="increase(attr)"><i class="icon-chevron-up"></i></a>
-									<a href ng-click="decrease(attr)"><i class="icon-chevron-down"></i></a>
+									<a href ng-click="increase(attr)"><i class="glyphicon glyphicon-chevron-up"></i></a>
+									<a href ng-click="decrease(attr)"><i class="glyphicon glyphicon-chevron-down"></i></a>
 								</div>
 							</td>
 							<td ng-hide="random">{{remaining[attr]}}</td>
@@ -28,15 +26,15 @@
 					</div>
 				</td>
 				<td>
-					<div class="pagination-centered">
+					<div class="center-block">
 						<div class="btn-group">
-							<button ng-class="{active: !random}" class="btn btn-default" ng-click="toggleRandom()">Rozhodnutí hráče</button>
-							<button ng-class="{active: random}" class="btn btn-default" ng-click="toggleRandom()">Náhoda</button>
+							<label ng:model="random" btn-radio="false" class="btn btn-default" ng-click="clearRandom()">Rozhodnutí hráče</label>
+							<label ng:model="random" btn-radio="true" class="btn btn-default" ng-click="makeRandom()">Náhoda</label>
 						</div>
 					</div>
 					<hr>
-					<div ng-show="random" class="pagination-centered">
-						<button class="btn btn-default" ng-click="generate()">
+					<div ng-show="random" class="center-block">
+						<button class="btn btn-default" ng-click="makeRandom()">
 							<i class="icon-random"></i> Hodit kostkami
 						</button>
 					</div>
@@ -50,7 +48,7 @@
 							<tr>
 								<td>{{remainingMain}}</td>
 								<td>{{remainingSecondary}}</td>
-								<td>{{uniqeness}}</td>
+								<td>{{model.uniqueness}}</td>
 							</tr>
 						</table>
 					</div>
@@ -59,7 +57,7 @@
 		</table>
 	</div>
 	<div class="modal-footer">
-		<a href="" class="btn btn-default" data-dismiss="modal">Zavřít</a>
+		<a href="" class="btn btn-default" ng-click="cancel()">Zavřít</a>
 		<button class="btn btn-default" ng-click="goto(0)">Zpět</button>
 		<button class="btn btn-primary" ng-click="goto(2)">Další</button>
 	</div>

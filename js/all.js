@@ -216,6 +216,171 @@ SM.database.helmets = {
   }
 };
 
+SM.database.items = {
+  "Kožená torna": {
+    name: "Kožená torna",
+    weight: 1,
+    price: 4,
+    category: "Zavazadla"
+  },
+  "Vak (do 5 kg)": {
+    name: "Vak (do 5 kg)",
+    weight: 0.4,
+    price: 1,
+    category: "Zavazadla"
+  },
+  "Malý batoh (do 10 kg)": {
+    name: "Malý batoh (do 10 kg)",
+    weight: 0.5,
+    price: 8,
+    category: "Zavazadla"
+  },
+  "Velký batoh (do 20 kg)": {
+    name: "Velký batoh (do 20 kg)",
+    weight: 0.75,
+    price: 15,
+    category: "Zavazadla"
+  },
+  "Měšec": {
+    name: "Měšec",
+    weight: 0.2,
+    price: 1.2,
+    category: "Ostatní"
+  },
+  "Přikrývka": {
+    name: "Přikrývka",
+    weight: 1.5,
+    price: 6,
+    category: "Na spaní"
+  },
+  "Spací vak": {
+    name: "Spací vak",
+    weight: 2,
+    price: 12,
+    category: "Na spaní"
+  },
+  "Velký měch (1 l)": {
+    name: "Velký měch (1 l)",
+    weight: 0.5,
+    price: 2.2,
+    category: "Nádoby"
+  },
+  "Malý měch (0,5 l)": {
+    name: "Malý měch (0,5 l)",
+    weight: 0.25,
+    price: 1.5,
+    category: "Nádoby"
+  },
+  "Flakónek (0,2 l)": {
+    name: "Flakónek (0,2 l)",
+    weight: 0.1,
+    price: 12.5,
+    category: "Nádoby"
+  },
+  "Skleněná láhev (0,5 l)": {
+    name: "Skleněná láhev (0,5 l)",
+    weight: 0.2,
+    price: 7.5,
+    category: "Nádoby"
+  },
+  "Malý soudek (5 l)": {
+    name: "Malý soudek (5 l)",
+    weight: 2,
+    price: 3.5,
+    category: "Nádoby"
+  },
+  "Velký sud (20 l)": {
+    name: "Velký sud (20 l)",
+    weight: 8,
+    price: 5,
+    category: "Nádoby"
+  },
+  "Ampulka": {
+    name: "Ampulka",
+    weight: 0.05,
+    price: 5,
+    category: "Nádoby"
+  },
+  "Křesadlo a troud": {
+    name: "Křesadlo a troud",
+    weight: 0.1,
+    price: 0.5,
+    category: "Světlo a oheň"
+  },
+  "Křída": {
+    name: "Křída",
+    weight: 0.05,
+    price: 0.3,
+    category: "Na psaní"
+  },
+  "Brk": {
+    name: "Brk",
+    weight: 0.05,
+    price: 0.5,
+    category: "Na psaní"
+  },
+  "Inkoust (0,1 l)": {
+    name: "Inkoust (0,1 l)",
+    weight: 0.1,
+    price: 5,
+    category: "Na psaní"
+  },
+  "Kalamář": {
+    name: "Kalamář",
+    weight: 0.1,
+    price: 5,
+    category: "Na psaní"
+  },
+  "Pergamen (24x18 cm)": {
+    name: "Pergamen (24x18 cm)",
+    weight: 0.1,
+    price: 2.5,
+    category: "Na psaní"
+  },
+  "Papyrus (24x18 cm)": {
+    name: "Papyrus (24x18 cm)",
+    weight: 0.02,
+    price: 0.5,
+    category: "Na psaní"
+  },
+  "Svíčka": {
+    name: "Svíčka",
+    weight: 0.05,
+    price: 0.3,
+    category: "Světlo a oheň"
+  },
+  "Pochodeň": {
+    name: "Pochodeň",
+    weight: 0.75,
+    price: 0.2,
+    category: "Světlo a oheň"
+  },
+  "Lucerna (0,5 l)": {
+    name: "Lucerna (0,5 l)",
+    weight: 1,
+    price: 10,
+    category: "Světlo a oheň"
+  },
+  "Stíněná lucerna": {
+    name: "Stíněná lucerna",
+    weight: 1.25,
+    price: 14,
+    category: "Světlo a oheň"
+  },
+  "Olej, dávka do lucerny (0, 5 l)": {
+    name: "Olej, dávka do lucerny (0, 5 l)",
+    weight: 0.5,
+    price: 1,
+    category: "Světlo a oheň"
+  },
+  "Provaz (10 m)": {
+    name: "Provaz (10 m)",
+    weight: 2,
+    price: 1,
+    category: "Ostatní"
+  }
+};
+
 var attrPopupLinker, module;
 
 module = angular.module('app', ['ngRoute', 'ui.bootstrap']);
@@ -274,15 +439,15 @@ module.directive('gold', function() {
 });
 
 attrPopupLinker = function($scope, el, attrs) {
-  var $el, $popup;
+  var $el;
   $scope.attrName = attrs.name;
   $el = $(el);
-  $popup = $('#attr-popup');
   $el.on('mouseenter', function() {
-    var actualHeight, actualWidth, pos;
+    var $popup, actualHeight, actualWidth, pos;
     $scope.$apply(function() {
       return $scope.$emit('showAttrTooltipRise', $scope.attr);
     });
+    $popup = $('#attr-popup');
     $popup.show();
     pos = $el.offset();
     pos.width = $el[0].offsetWidth;
@@ -295,7 +460,7 @@ attrPopupLinker = function($scope, el, attrs) {
     });
   });
   return $el.on('mouseleave', function() {
-    return $popup.hide();
+    return $('#attr-popup').hide();
   });
 };
 
@@ -325,7 +490,7 @@ module.directive('damageFatigueBars', function() {
   return {
     restrict: 'EA',
     scope: true,
-    templateUrl: 'damageFatigueBars.html',
+    templateUrl: 'partials/damageFatigueBars.html',
     controller: 'DamageFatigueController',
     link: function($scope, el, attrs, controller) {
       return $scope.type = attrs.type;
@@ -333,9 +498,42 @@ module.directive('damageFatigueBars', function() {
   };
 });
 
+module.directive('autofocus', function() {
+  return {
+    restrict: 'A',
+    link: function($scope, el) {
+      return $(el).focus();
+    }
+  };
+});
+
 module.service('Character', [
   '$rootScope', 'characterStorage', function($rootScope, characterStorage) {
     return CharacterService($rootScope, characterStorage.getLast());
+  }
+]);
+
+module.service('confirm', [
+  '$modal', function($modal) {
+    return {
+      show: function(leadText, text, buttons, callback) {
+        return $modal.open({
+          templateUrl: 'partials/confirm.html',
+          controller: 'ConfirmModalController',
+          resolve: {
+            leadText: function() {
+              return leadText;
+            },
+            text: function() {
+              return text;
+            },
+            buttons: function() {
+              return buttons;
+            }
+          }
+        });
+      }
+    };
   }
 ]);
 
@@ -412,22 +610,22 @@ module.factory('growler', function(storage) {
 
 var NewCharacterAttrsController, NewCharacterBackgroundController, NewCharacterController, NewCharacterSkillsController;
 
-NewCharacterController = function($scope, $modalInstance, characterStorage, growler) {
+NewCharacterController = function($scope, $modalInstance, $timeout) {
   var reset;
-  $scope.ok = function() {
-    return $modalInstance.close($scope.newCharacter);
-  };
   $scope.cancel = function() {
     return $modalInstance.dismiss('cancel');
   };
   $scope.races = Races.names;
   $scope.professions = Professions.names;
+  $scope.pages = ['Základní', 'Vlastnosti', 'Zázemí', 'Dovednosti'];
   $scope.part = 0;
-  $scope.uniqeness = 2;
-  $scope.skillPoints = {
-    physical: 0,
-    psychic: 0,
-    combined: 0
+  $scope.model = {
+    uniqueness: 2,
+    skillPoints: {
+      physical: 0,
+      psychic: 0,
+      combined: 0
+    }
   };
   $scope.newCharacter = {
     name: '',
@@ -443,12 +641,7 @@ NewCharacterController = function($scope, $modalInstance, characterStorage, grow
     newChar = $scope.newCharacter;
     newChar.corrections = Races.getRaceCorrections(newChar.race);
     charObj = new Character(newChar);
-    characterStorage.putLast(charObj);
-    $scope.$parent.character = charObj;
-    return growler.success({
-      title: 'Postava vytvořena',
-      message: "Postava " + charObj.name + " vytvořena a uložena"
-    });
+    return $modalInstance.close(charObj);
   };
   $scope.goto = function(part) {
     return $scope.part = part;
@@ -459,10 +652,13 @@ NewCharacterController = function($scope, $modalInstance, characterStorage, grow
   $scope.$watch('newCharacter.race', reset);
   $scope.$watch('newCharacter.profession', reset);
   $scope.$watch('newCharacter.male', reset);
-  $scope.$watch('uniqeness', reset);
-  return $scope.$watch('skillPoints', function() {
+  $scope.$watch('model.uniqueness', reset);
+  $scope.$watch('model.skillPoints', function() {
     return $scope.$broadcast('resetSkillPoints');
   }, true);
+  return $timeout((function() {
+    return reset();
+  }), 1000);
 };
 
 NewCharacterAttrsController = function($scope) {
@@ -474,8 +670,8 @@ NewCharacterAttrsController = function($scope) {
     $scope.remaining = {};
     $scope.useGenderCorrections = !$scope.newCharacter.male;
     $scope.newCharacter.attributes = Races.getAttrs($scope.newCharacter.race);
-    $scope.remainingMain = $scope.uniqeness;
-    $scope.remainingSecondary = $scope.uniqeness * 2;
+    $scope.remainingMain = $scope.model.uniqueness;
+    $scope.remainingSecondary = $scope.model.uniqueness * 2;
     $scope.mainAttrs = Professions.getMainAttrs($scope.newCharacter.profession);
     $scope.random = false;
     for (name in $scope.newCharacter.attributes) {
@@ -490,7 +686,7 @@ NewCharacterAttrsController = function($scope) {
     for (name in _ref1) {
       value = _ref1[name];
       if (!$scope.isMainAttr(name)) {
-        $scope.max[name] = value + $scope.uniqeness;
+        $scope.max[name] = value + $scope.model.uniqueness;
       }
     }
     _ref2 = $scope.mainAttrs;
@@ -550,31 +746,25 @@ NewCharacterAttrsController = function($scope) {
   computeRemaining = function() {
     var allocated, attrName, main, sec, val, _ref, _results;
     main = $scope.remainingMain;
-    sec = Math.min($scope.remainingSecondary, $scope.uniqeness);
+    sec = Math.min($scope.remainingSecondary, $scope.model.uniqueness);
     _ref = $scope.allocated;
     _results = [];
     for (attrName in _ref) {
       allocated = _ref[attrName];
       if ($scope.isMainAttr(attrName)) {
-        val = Math.min(main, $scope.uniqeness - allocated, $scope.max[attrName] - $scope.newCharacter.attributes[attrName]);
+        val = Math.min(main, $scope.model.uniqueness - allocated, $scope.max[attrName] - $scope.newCharacter.attributes[attrName]);
         _results.push($scope.remaining[attrName] = val);
       } else {
-        _results.push($scope.remaining[attrName] = Math.min(sec, $scope.uniqeness - allocated));
+        _results.push($scope.remaining[attrName] = Math.min(sec, $scope.model.uniqueness - allocated));
       }
     }
     return _results;
   };
-  $scope.toggleRandom = function() {
-    $scope.random = !$scope.random;
-    if ($scope.random) {
-      return $scope.generate();
-    } else {
-      return resetAttrs();
-    }
-  };
-  $scope.generate = function() {
-    var attrName, increment, index, values, _i, _len, _ref, _results;
+  $scope.makeRandom = function() {
+    var attrName, increment, index, isRandom, values, _i, _len, _ref, _results;
+    isRandom = $scope.random;
     resetAttrs();
+    $scope.random = isRandom;
     values = {
       3: [0, 1, 1, 2, 2, 3],
       2: [0, 0, 1, 1, 2, 2],
@@ -585,15 +775,18 @@ NewCharacterAttrsController = function($scope) {
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       attrName = _ref[_i];
       index = Math.floor(Math.random() * 6);
-      increment = values[$scope.uniqeness][index];
+      increment = values[$scope.model.uniqueness][index];
       _results.push($scope.newCharacter.attributes[attrName] = Math.min($scope.newCharacter.attributes[attrName] + increment, $scope.max[attrName]));
     }
     return _results;
   };
+  $scope.clearRandom = function() {
+    return resetAttrs();
+  };
   $scope.$on('reset', function() {
     return resetAttrs();
   });
-  return $scope.$watch('useGenderCorrections', function(newUse, oldUse) {
+  $scope.$watch('useGenderCorrections', function(newUse, oldUse) {
     var name, value, _ref, _results;
     if ($scope.newCharacter.male) {
       return;
@@ -607,6 +800,7 @@ NewCharacterAttrsController = function($scope) {
     }
     return _results;
   });
+  return resetAttrs();
 };
 
 NewCharacterBackgroundController = function($scope) {
@@ -620,7 +814,7 @@ NewCharacterBackgroundController = function($scope) {
   $scope.ancestries = ['Nalezenec', 'Sirotek', 'Z neúplné rodiny', 'Z pochybné rodiny', 'Ze slušné rodiny', 'Z dobré rodiny', 'Z velmi dobré a vlivné rodiny', 'Šlechtic', 'Šlechtic z dobrého rodu'];
   $scope.wealths = [1, 3, 10, 30, 100, 300, 1000, 3000, 10000];
   reset = function() {
-    $scope.total = (4 - $scope.uniqeness) * 5;
+    $scope.total = (4 - $scope.model.uniqueness) * 5;
     $scope.remaining = {};
     $scope.allocated = {
       ancestry: 0,
@@ -628,9 +822,9 @@ NewCharacterBackgroundController = function($scope) {
       skills: 0
     };
     $scope.professionSkillPoints = Professions.getSkillPoints($scope.newCharacter.profession);
-    $scope.skillPoints.physical = $scope.professionSkillPoints.physical[0];
-    $scope.skillPoints.psychic = $scope.professionSkillPoints.psychic[0];
-    $scope.skillPoints.combined = $scope.professionSkillPoints.combined[0];
+    $scope.model.skillPoints.physical = $scope.professionSkillPoints.physical[0];
+    $scope.model.skillPoints.psychic = $scope.professionSkillPoints.psychic[0];
+    $scope.model.skillPoints.combined = $scope.professionSkillPoints.combined[0];
     return computeRemaining();
   };
   $scope.increase = function(type) {
@@ -665,9 +859,9 @@ NewCharacterBackgroundController = function($scope) {
       $scope.allocated.skills--;
       $scope.total++;
     }
-    $scope.skillPoints.physical = $scope.professionSkillPoints.physical[$scope.allocated.skills];
-    $scope.skillPoints.psychic = $scope.professionSkillPoints.psychic[$scope.allocated.skills];
-    $scope.skillPoints.combined = $scope.professionSkillPoints.combined[$scope.allocated.skills];
+    $scope.model.skillPoints.physical = $scope.professionSkillPoints.physical[$scope.allocated.skills];
+    $scope.model.skillPoints.psychic = $scope.professionSkillPoints.psychic[$scope.allocated.skills];
+    $scope.model.skillPoints.combined = $scope.professionSkillPoints.combined[$scope.allocated.skills];
     return $scope.newCharacter.gold = $scope.wealths[$scope.allocated.wealth];
   };
   return $scope.$on('reset', function() {
@@ -680,7 +874,7 @@ NewCharacterSkillsController = function($scope) {
   $scope.skillsList = Skills.getAll();
   reset = function() {
     $scope.selectedType = 'physical';
-    return $scope.remaining = angular.copy($scope.skillPoints);
+    return $scope.remaining = angular.copy($scope.model.skillPoints);
   };
   $scope.increase = function(skillName, type) {
     var skill, _i, _len, _ref;
@@ -1328,7 +1522,7 @@ Skills = (function() {
 
   Skills.getAll = function() {
     var db, index, name, _ref;
-    db = this.database;
+    db = this.database.slice();
     _ref = Weapons.shortRangeCategories;
     for (index in _ref) {
       name = _ref[index];
@@ -2261,6 +2455,18 @@ CombatController = function($scope) {
   });
 };
 
+var ConfirmModalController;
+
+ConfirmModalController = function($scope, $modalInstance, leadText, text, buttons) {
+  $scope.leadText = leadText;
+  $scope.text = text;
+  $scope.buttons = buttons;
+  return $scope.buttonClick = function(button) {
+    button.action();
+    return $modalInstance.close();
+  };
+};
+
 var DamageFatigueController;
 
 DamageFatigueController = function($scope, $attrs, growler) {
@@ -2344,9 +2550,142 @@ DamageFatigueController = function($scope, $attrs, growler) {
   });
 };
 
+var EquipmentController;
+
+EquipmentController = function($scope, $modal, confirm) {
+  $scope.addNewItem = function() {
+    var confirmPrice, dialog;
+    dialog = $modal.open({
+      templateUrl: 'partials/itemList.html',
+      controller: 'ItemListController',
+      resolve: {
+        confirmCallback: function() {
+          return function(result, success, reject) {
+            if (result.pay) {
+              if ($scope.character.gold < result.totalPrice) {
+                return confirmPrice(result, success, reject);
+              }
+            } else {
+              return success();
+            }
+          };
+        }
+      }
+    });
+    confirmPrice = function(result, success, reject) {
+      return confirm.show('Nedostatek peněz', 'Postava nemá dostatek peněz k zaplacení předmětu. Chcete zaplatit', [
+        {
+          caption: 'Zaplatit',
+          action: success
+        }, {
+          caption: 'Nezaplatit',
+          action: function() {
+            result.pay = false;
+            return success();
+          }
+        }, {
+          caption: 'Storno',
+          action: reject
+        }
+      ]);
+    };
+    return dialog.result.then(function(result) {
+      if (result.pay) {
+        if ($scope.character.gold < result.totalPrice) {
+          $scope.character.gold = 0;
+        } else {
+          $scope.character.gold -= result.totalPrice;
+        }
+      }
+      console.log(result);
+      return $scope.character.items.push(result.item);
+    });
+  };
+  $scope.removeItem = function(itemIdx) {
+    return confirm.show('Odstranit předmět?', "Chcete odstranit záznam s předmětem '" + $scope.character.items[itemIdx].name + "'?", [
+      {
+        caption: 'Odstranit',
+        className: 'btn-danger',
+        action: function() {
+          return $scope.character.items.splice(itemIdx, 1);
+        }
+      }, {
+        caption: 'Storno',
+        action: function() {}
+      }
+    ]);
+  };
+  $scope.increase = function(itemIdx) {
+    return $scope.character.items[itemIdx].count++;
+  };
+  $scope.decrease = function(itemIdx) {
+    var item;
+    item = $scope.character.items[itemIdx];
+    if (item.count > 1) {
+      return item.count--;
+    } else {
+      return $scope.removeItem(itemIdx);
+    }
+  };
+  return $scope.getLoad = function() {
+    var item, load, _i, _len, _ref;
+    load = 0;
+    _ref = $scope.character.items;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      item = _ref[_i];
+      load += item.weight * item.count;
+    }
+    return load;
+  };
+};
+
+var ItemListController;
+
+ItemListController = function($scope, $modalInstance, confirmCallback) {
+  var itemName;
+  $scope.items = (function() {
+    var _results;
+    _results = [];
+    for (itemName in SM.database.items) {
+      _results.push(SM.database.items[itemName]);
+    }
+    return _results;
+  })();
+  $scope.selectedItem = null;
+  $scope.model = {
+    price: 0,
+    count: 1,
+    payForItem: false,
+    userItemName: ''
+  };
+  $scope.select = function(item) {
+    $scope.model.price = item.price;
+    return $scope.selectedItem = item;
+  };
+  $scope.ok = function() {
+    var result;
+    result = {
+      item: {
+        name: $scope.model.userItemName || $scope.selectedItem.name,
+        weight: $scope.selectedItem.weight,
+        price: $scope.model.price,
+        count: $scope.model.count
+      },
+      pay: $scope.model.payForItem,
+      totalPrice: $scope.model.count * $scope.model.price
+    };
+    return confirmCallback(result, function() {
+      return $modalInstance.close(result);
+    }, function() {});
+  };
+  return $scope.close = function() {
+    return $modalInstance.dismiss('close');
+  };
+};
+
 var MainController;
 
-MainController = function($scope, $rootScope, Character, growler, $timeout, $modal) {
+MainController = function($scope, $rootScope, Character, growler, $timeout, $modal, characterStorage) {
   var notifyOnline;
   $scope.character = Character.currentCharacter;
   $scope.attributes = Attributes;
@@ -2381,9 +2720,17 @@ MainController = function($scope, $rootScope, Character, growler, $timeout, $mod
   });
   return $scope.createCharacter = function() {
     var dialog;
-    return dialog = $modal.open({
-      templateUrl: 'createCharacterForms.html',
+    dialog = $modal.open({
+      templateUrl: 'partials/createCharacterForms.html',
       controller: 'NewCharacterController'
+    });
+    return dialog.result.then(function(newChar) {
+      characterStorage.putLast(newChar);
+      $scope.character = newChar;
+      return growler.success({
+        title: 'Postava vytvořena',
+        message: "Postava " + newChar.name + " vytvořena a uložena"
+      });
     });
   };
 };
@@ -2536,23 +2883,24 @@ var Character;
 
 Character = (function() {
   function Character(character) {
-    var _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;
+    var _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
     this.name = character.name;
     this.profession = character.profession;
     this.race = character.race;
     this.male = character.male;
     this.background = (_ref = character.background) != null ? _ref : "";
-    this.gold = (_ref1 = character.gold) != null ? _ref1 : 0;
+    this.items = (_ref1 = character.items) != null ? _ref1 : [];
+    this.gold = (_ref2 = character.gold) != null ? _ref2 : 0;
     this.attributes = new Attributes(this, character.attributes);
-    this.corrections = (_ref2 = character.corrections) != null ? _ref2 : [];
-    this.damage = (_ref3 = character.damage) != null ? _ref3 : 0;
-    this.fatigue = (_ref4 = character.fatigue) != null ? _ref4 : 0;
-    this.penalties = (_ref5 = character.penalties) != null ? _ref5 : {
+    this.corrections = (_ref3 = character.corrections) != null ? _ref3 : [];
+    this.damage = (_ref4 = character.damage) != null ? _ref4 : 0;
+    this.fatigue = (_ref5 = character.fatigue) != null ? _ref5 : 0;
+    this.penalties = (_ref6 = character.penalties) != null ? _ref6 : {
       damage: 0,
       fatigue: 0
     };
-    this.armor = (_ref6 = character.armor) != null ? _ref6 : 'Beze zbroje';
-    this.helmet = (_ref7 = character.helmet) != null ? _ref7 : 'Bez pokrývky hlavy';
+    this.armor = (_ref7 = character.armor) != null ? _ref7 : 'Beze zbroje';
+    this.helmet = (_ref8 = character.helmet) != null ? _ref8 : 'Bez pokrývky hlavy';
   }
 
   Character.prototype.attr = function(attrName, value) {

@@ -28,8 +28,8 @@
         <script src="lib/angular-bootstrap/ui-bootstrap-tpls.js"></script>
         <script src="lib/angular-i18n/angular-locale_cs-cz.js"></script>
 
-        <script src="js/vendor/cycle.js"></script>
-        <script src="js/vendor/json2.js"></script>
+        <script src="lib/json2/cycle.js"></script>
+        <script src="lib/json2/json2.js"></script>
 
         <script src="js/all.js"></script>
     </head>
@@ -39,7 +39,7 @@
 			include('src/selectArmorForm.html')
         </div>-->
 
-		<div ng-include="menu.html"></div>
+		<div ng-include="'menu.html'"></div>
 
         <div class="container">
             <div class="jumbotron">
@@ -50,7 +50,7 @@
                 <p>{{character.background}}</p>
             </div>
 
-			<div ng-include="attrPopup.html"></div>
+			<div ng-include="'attrPopup.html'"></div>
 
             <h3>Vlastnosti</h3>
 			<div class="row">
@@ -117,6 +117,48 @@
             <h3>Na cesty</h3>
             <div data-damage-fatigue-bars data-type="fatigue"></div>
 
+			<h3>Výbava</h3>
+			<div ng-controller="EquipmentController">
+				<div>Peníze: <span data-gold data-count="character.gold"></span></div>
+<!--				<div>
+					Náklad
+					<div class="progress">
+						<div class="progress-bar" ng-style="{width: getLoad() * 100 / getMaxLoad() }">{{getLoad() | number:2}} / {{getMaxLoad()}} kg</div>
+					</div>
+				</div>-->
+				<table class="table">
+					<tr>
+						<th>Předmět</th>
+						<th>Počet</th>
+						<th>Váha (kg)</th>
+						<th>Cena (zl)</th>
+						<th></th>
+					</tr>
+					<tr ng-repeat="item in character.items" >
+						<td>{{item.name}}</td>
+						<td>{{item.count}}</td>
+						<td>{{item.weight}}</td>
+						<td>{{item.price}}</td>
+						<td>
+							<button class="btn btn-default button-xs" ng-click="increase($index)" title="Zvýšit počet">
+								<span class="glyphicon glyphicon-plus"></span>
+							</button>
+							<button class="btn btn-default button-xs" ng-click="decrease($index)" title="Snížit počet">
+								<span class="glyphicon glyphicon-minus"></span>
+							</button>
+							<button class="btn btn-default button-xs" ng-click="removeItem($index)" title="Odstranit záznam">
+								<span class="glyphicon glyphicon-remove"></span>
+							</button>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="5">
+							<button ng-click="addNewItem()" class="btn btn-default">Přidat</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+			
             <hr>
 
             <footer>

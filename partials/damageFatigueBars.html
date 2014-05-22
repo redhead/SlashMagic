@@ -35,13 +35,19 @@
 		</tr>
 	</table>
 
-	<div class="controls">
-		<label ui:if="type == 'damage'" for="damageSpinner">Zranění:</label>
-		<label ui:if="type == 'fatigue'" for="fatigueSpinner">Únava:</label>
-		<div class="input-append">
-			<input id="{{type}}Spinner" type="number" min="0" max="{{getLimit(type) * 3}}" ng-model="character[type]" class="span1">
-			<button type="button" class="btn" ng-show="character[type] >= getLimit(type)" ng-click="rollPenalty(type)" ng-disabled="!isRollEnabled[type]">Hod na postih</button>
+	<div class="row">
+		<div class="col-sm-2">
+			<label ng-show="type == 'damage'" for="damageSpinner">Zranění:</label>
+			<label ng-show="type == 'fatigue'" for="fatigueSpinner">Únava:</label>
+		</div>
+		<div class="input-group col-sm-2">
+			<input id="{{type}}Spinner" type="number" min="0" max="{{getLimit(type) * 3}}" ng-model="character[type]" class="form-control">
+			<span class="input-group-btn">
+				<button type="button" class="btn btn-default" ng-style="{visibility: (character[type] >= getLimit(type) ? 'visible' : 'hidden')}" ng-click="rollPenalty(type)" ng-disabled="!isRollEnabled[type]">Hod na postih</button>
+			</span>
+		</div>
+		<div ng-show="character[type] >= getLimit(type)" class="col-sm-2">
+			Postih: <span ng-class="{red: character.penalties[type] < 0}">{{character.penalties[type] | attr}}</span>
 		</div>
 	</div>
-	<div ng-show="character[type] >= getLimit(type)">Postih: <span ng-class="{red: character.penalties[type] < 0}">{{character.penalties[type] | attr}}</span></div>
 </div>

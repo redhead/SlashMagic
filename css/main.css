@@ -2,59 +2,6 @@ body.modal-open {
     overflow: hidden;
 }
 
-.green {
-	color: green;
-}
-.red {
-	color: darkred;
-}
-
-#attr-popup ul li {
-	margin-left: 10px
-}
-#attr-popup .green, #attr-popup .red {
-	font-weight: bold;
-}
-
-.attrs-modal-body > table {
-	width: 100%;
-}
-.attrs-modal-body .divider-2 > td {
-	padding: 10px;
-	width: 50%;
-	vertical-align: top;
-}
-
-.attrs-modal-body table {
-	width: 100%;
-}
-
-.table-background td:nth-child(1) {
-	width: 100px
-}
-.table-background td:nth-child(2) {
-	width: 40px
-}
-.table-background td:nth-child(3) {
-	width: 50px
-}
-.table-background td:nth-child(4) {
-	width: 20px
-}
-
-.table-skills td:nth-child(2) {
-	width: 15px
-}
-.table-skills td:nth-child(3) {
-	width: 40px
-}
-
-.skill-list {
-	max-height: 200px;
-	overflow: auto;
-	max-width: 340px;
-	margin: 15px auto;
-}
 
 .progress-bars {
 	margin-top: 5px;
@@ -64,9 +11,4 @@ body.modal-open {
 }
 .progress-bars .progress {
 	margin-bottom: 0;
-}
-
-
-.bootstrap-growl h4 {
-	font-size: 15px;
 }
