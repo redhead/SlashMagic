@@ -1,42 +1,58 @@
 {
-	"name": "SlashMagic",
-	"version": "0.0.1",
-	"authors": [
-		"Radek Ježdík <redhead@email.cz>"
-	],
-	"license": "MIT",
-	"private": true,
-	"ignore": [
-		"**/.*",
-		"node_modules",
-		"bower_components",
-		"test",
-		"tests"
-	],
-	"dependencies": {
-		"angular": "~1.2",
-		"angular-chosen-localytics": "~1.0.6",
-		"angular-ui": "*",
-		"angular-i18n": "1.2",
-		"angular-bootstrap": "*",
-		"json2": "*",
-		"jquery": "~2.1.0",
-		"angular-ui": "~0.4.0",
-		"bootstrap-less": "3",
-		"bootstrap": "3"
-	},
-	"overrides": {
-		"json2": {
-			"main": ["json2.js", "cycle.js"]
-		},
-		"bootstrap-less": {
-			"main": "less/*.less"
-		},
-		"angular-ui": {
-			"main": ["build/angular-ui.min.js", "build/angular-ui.min.css"]
-		},
-		"angular-i18n": {
-			"main": ["angular-locale_cs-cz.js"]
-		}
+  "name": "SlashMagic",
+  "version": "0.0.1",
+  "authors": [
+    "Radek Ježdík <redhead@email.cz>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.2",
+    "angular-chosen-localytics": "~1.0.6",
+    "angular-ui": "~0.4.0",
+    "angular-ui-router": "~0.2",
+    "angular-i18n": "1.2",
+    "angular-bootstrap": "*",
+    "json2": "*",
+    "jquery": "~2.1.0",
+    "bootstrap-less": "3",
+    "bootstrap": "3"
+  },
+  "overrides": {
+    "json2": {
+      "main": [
+        "json2.js",
+        "cycle.js"
+      ]
+    },
+    "bootstrap-less": {
+      "main": "less/*.less"
+    },
+    "angular-ui": {
+      "main": [
+        "build/angular-ui.min.js",
+        "build/angular-ui.min.css"
+      ]
+    },
+    "angular-i18n": {
+      "main": [
+        "angular-locale_cs-cz.js"
+      ]
+    },
+	"chosen": {
+		"main": [
+			"chosen.jquery.min.js",
+			"chosen.min.css",
+			"chosen-sprite.png",
+			"chosen-sprite@2x.png"
+		]
 	}
+  }
 }

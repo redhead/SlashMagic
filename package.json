@@ -1,20 +1,20 @@
 {
-	"name": "nw-demo",
-	"main": "index.html",
-	"window": {
-		"toolbar": false
-	},
-	"devDependencies": {
-		"gulp": "^3.6.0",
-		"gulp-coffee": "^1.4.1",
-		"gulp-concat": "^2.2.0",
-		"gulp-changed": "^0.3.0",
-		"gulp-file-include": "^0.2.1",
-		"gulp-prettify": "^0.2.0",
-		"gulp-html-replace": "^1.1.0",
-		"gulp-plumber": "^0.6.1",
-		"gulp-manifest": "0.0.3",
-		"gulp-bower-files": "^0.2.1",
-		"gulp-replace": "^0.2.0"
-	}
+  "name": "nw-demo",
+  "main": "index.html",
+  "window": {
+    "toolbar": false
+  },
+  "devDependencies": {
+    "gulp": "^3.6.0",
+    "gulp-coffee": "^1.4.1",
+    "gulp-concat": "^2.2.0",
+    "gulp-changed": "^0.3.0",
+    "gulp-file-include": "^0.2.1",
+    "gulp-prettify": "^0.2.0",
+    "gulp-html-replace": "^1.1.0",
+    "gulp-plumber": "^0.6.1",
+    "gulp-manifest": "0.0.3",
+    "gulp-bower-files": "^0.2.1",
+    "gulp-replace": "^0.2.0"
+  }
 }

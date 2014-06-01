@@ -4,7 +4,6 @@ coffee = require('gulp-coffee'),
 concat = require('gulp-concat'),
 replace = require('gulp-replace'),
 changed = require('gulp-changed'),
-include = require('gulp-file-include'),
 prettify = require('gulp-prettify'),
 htmlreplace = require('gulp-html-replace'),
 plumber = require('gulp-plumber'),
@@ -19,9 +18,8 @@ var paths = {
 };
 
 gulp.task('index', function() {
-	gulp.src('src/index.html')
+	gulp.src(['src/*.html', 'src/partials/**/*.html'], { base: "src" })
 		.pipe(plumber())
-		.pipe(include('@@'))
 		.pipe(htmlreplace({
 			'js': 'js/all.min.js'
 		}))
@@ -85,5 +83,5 @@ gulp.task('watch', function() {
 	gulp.watch(paths.less, ['less']);
 });
 
-var all = ['index', 'statics', 'scripts', 'manifest', 'bowercopy', 'watch', 'less']
+var all = ['index', 'statics', 'scripts', 'manifest', 'bowercopy', 'watch']
 gulp.task('default', all);

@@ -8,13 +8,23 @@ Interpreter =
 
 
 Parser = 
+	skillRE: /^\[([^\]]+)]/
+	
 	isOperator: (c) ->
 		return c.match(/\+|-|\*|\//) != null
+	
+	isSkill: (c) ->
+		return c.match(Parser.skillRE) != null
 
 	createAST: (queue, rounding) ->
 		t = queue.pop()
+		
 		if !isNaN t
 			new Constant t
+
+		else if t instanceof SkillToken
+			new Skill t.skillName
+
 		else if Parser.isOperator t
 			right = Parser.createAST queue, rounding
 			left = Parser.createAST queue, rounding
@@ -27,6 +37,7 @@ Parser =
 					new Times left, right
 				when '/'
 					new Divide left, right, rounding
+		
 		else
 			new Variable t
 
@@ -57,14 +68,22 @@ Parser =
 		token = ->
 			return false unless expression.length
 			c = expression[0]
+			
 			if Parser.isOperator(c) or c is '(' or c is ')'
 				t = c
+			
+			else if Parser.isSkill expression
+				m = expression.match Parser.skillRE
+				if m?
+					t = new SkillToken m[1]
+
 			else
 				m = expression.match /^[a-zA-Z0-9]+/
 				if m?
 					t = m[0]
 				else
 					throw "Chyba ve vzorci"
+
 			expression = expression.substring t.length
 			return true
 
@@ -74,7 +93,10 @@ Parser =
 		while token()
 			if !isNaN t
 				outputQ.push parseInt(t)
-			
+
+			else if t instanceof SkillToken
+				outputQ.push t
+
 			else if Parser.isOperator t
 				while stack.length
 					o2 = last(stack)
@@ -83,6 +105,9 @@ Parser =
 						outputQ.push o2
 					else
 						break
+				stack.push t
+			
+			else if Parser.isSkill t
 				stack.push t
 			
 			else if t is '('
@@ -116,6 +141,10 @@ Parser =
 
 		return Parser.createAST outputQ, rounding
 
+
+class SkillToken
+	constructor: (@skillName) ->
+		@length = @skillName.length + 2
 
 
 class Constant
@@ -162,3 +191,14 @@ class Divide
 			return Math.ceil result
 		else
 			return Math.round result
+
+class Skill
+	constructor: (@skillName) ->
+	interpret: (context) ->
+		return context.getSkill(@skillName).level
+
+class DamageFatigueValue
+	constructor: (@value) ->
+	interpret: (context) ->
+		result = @value.interpret(@context)
+		return DamageTable.getPoints(result)

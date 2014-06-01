@@ -1,24 +1,21 @@
 <form ng-controller="NewCharacterSkillsController" name="createForm4" ng-show="part == 3" class="form-horizontal modal-form">
-	<div class="modal-header">
-		<h3>Dovednosti</h3>
-	</div>
 	<div class="modal-body">
-		<div class="pagination-centered">
+		<div class="skill-buttons">
 			<div class="btn-group">
 				<button class="btn btn-default" ng-class="{active: selectedType === 'physical'}" ng-click="selectedType = 'physical'">Fyzické ({{remaining.physical}})</button>
 				<button class="btn btn-default" ng-class="{active: selectedType === 'psychic'}" ng-click="selectedType = 'psychic'">Psychické ({{remaining.psychic}})</button>
 				<button class="btn btn-default" ng-class="{active: selectedType === 'combined'}" ng-click="selectedType = 'combined'">Kombinované ({{remaining.combined}})</button>
 			</div>
 		</div>
-		<div ng-repeat="type in ['physical', 'psychic', 'combined']" class="skill-list" ng-show="selectedType == type">
+		<div ng-repeat="type in ['physical', 'psychic', 'combined']" class="skill-list" ng-show="selectedType === type">
 			<table class="table table-condensed table-hover table-skills">
 				<tr ng-repeat="skill in skillsList | filter:{type:type}">
 					<td>{{skill.name}}</td>
 					<td>{{getLevel(skill.name)}}</td>
 					<td>
 						<div class="pull-right">
-							<a href ng-click="increase(skill.name, type)"><i class="icon-chevron-up"></i></a>
-							<a href ng-click="decrease(skill.name, type)"><i class="icon-chevron-down"></i></a>
+							<a href ng-click="increase(skill.name, type)"><i class="glyphicon glyphicon-chevron-up"></i></a>
+							<a href ng-click="decrease(skill.name, type)"><i class="glyphicon glyphicon-chevron-down"></i></a>
 						</div>
 					</td>
 				</tr>
@@ -26,8 +23,8 @@
 		</div>
 	</div>
 	<div class="modal-footer">
-		<a href class="btn btn-default" data-dismiss="modal">Zavřít</a>
+		<a href="" class="btn btn-default" ng-click="cancel()">Zavřít</a>
 		<button class="btn btn-default" ng-click="goto(2)">Zpět</button>
-		<button class="btn btn-success" ng-click="saveAndShow()" data-dismiss="modal">Dokončit</button>
+		<button class="btn btn-success" ng-click="saveAndShow()">Dokončit</button>
 	</div>
 </form>

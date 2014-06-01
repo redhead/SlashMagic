@@ -2,3 +2,243 @@
 
 @import "../../dist/lib/bootstrap-less/less/bootstrap.less";
 
+.newCharacter-form-0 {
+	.form-horizontal;
+}
+
+.newCharacter-form-0 .modal-body > div > label {
+	.make-sm-column(3);
+
+	~ div {
+		.make-sm-column(9);
+	}
+}
+	
+.newCharacter-form-0 .modal.body .btn-group label {
+	.btn;
+	.btn-default;
+}
+
+.newCharacter-race, .newCharacter-profession {
+	.form-control;
+	
+	width: 270px;
+	margin-right: 5px;
+	float: left;
+}
+
+.newCharacter-header {
+	.modal-header;
+	
+	padding-bottom: 0;
+}
+
+.newCharacter-subtitles {
+	.make-row();
+	
+	h5 {
+		.make-xs-column(3);
+		.center-block();
+		
+		text-align: center;
+		font-weight: bold;
+	}	
+}
+
+.newCharacter-progress {
+	.progress;
+	
+	border-radius: 0;
+	height: 5px;
+	margin-left: -15px;
+	margin-right: -15px;
+	margin-bottom: 0;
+	
+	div {
+		.progress-bar;
+	}
+}
+
+.green {
+	color: green;
+}
+.red {
+	color: darkred;
+}
+
+#attr-popup ul li {
+	margin-left: 10px
+}
+#attr-popup .green, #attr-popup .red {
+	font-weight: bold;
+}
+
+.attrs-modal-body > table {
+	width: 100%;
+}
+.attrs-modal-body .divider-2 > td {
+	padding: 10px;
+	width: 50%;
+	vertical-align: top;
+}
+
+.attrs-modal-body table {
+	width: 100%;
+}
+
+.skill-buttons {
+	text-align: center;
+}
+.skill-list {
+	max-height: 200px;
+	overflow: auto;
+	max-width: 340px;
+	margin: 15px auto;
+}
+
+.item-list {
+	.make-sm-column(6);
+}
+.item-list > .item-table {
+	height: 300px;
+	overflow: auto;
+}
+.item-list input {
+	margin-bottom: 2px;
+}
+
+.item-list table tr {
+	cursor: pointer;
+}
+
+.item-detail {
+	.make-sm-column(6);
+}
+.item-detail table {
+	margin-bottom: 20px;
+}
+
+.bootstrap-growl h4 {
+	font-size: 15px;
+}
+
+.left-inner-addon {
+    position: relative;
+}
+.left-inner-addon input {
+    padding-left: 30px;    
+}
+.left-inner-addon span {
+    position: absolute;
+    padding: 10px 12px;
+    pointer-events: none;
+}
+
+.skills-column {
+	.make-sm-column(4);
+}
+.skills-column h4 {
+	border-bottom: 1px solid @table-border-color;
+	padding-bottom: 10px;
+	margin-bottom: 0;
+}
+.skill-row {
+	vertical-align: middle;
+}
+.skill-points {
+	width: 30px;
+	display: inline-block;
+	font-size: 180%;
+	vertical-align: middle;
+}
+.skill-points span {
+	float: left;
+	color: lighten(@text-muted, 20%);
+}
+.skill-points span.active {
+	color: @text-color
+}
+
+.popover-title {
+	font-weight: bold;
+}
+
+
+.progress {
+	background-color: darken(@progress-bg, 5%);
+}
+
+.progress-bars {
+	margin-top: 5px;
+}
+.progress-bars td {
+	padding-left: 10px;
+}
+.progress-bars .progress {
+	margin-bottom: 0;
+}
+
+.progress-bars tr:nth-child(1) .progress {
+	.border-top-radius(@border-radius-base);
+	.border-bottom-radius(0);
+}
+.progress-bars tr:nth-child(2) .progress {
+	.border-top-radius(0);
+	.border-bottom-radius(0);
+}
+.progress-bars tr:nth-child(3) .progress {
+	.border-top-radius(0);
+	.border-bottom-radius(@border-radius-base);
+}
+
+.nav-tabs > li a {
+	cursor: pointer;
+	font-size: 120%;
+	font-weight: bold;
+}
+
+.character-tabs {
+	margin-bottom: 20px;
+}
+
+.character-experience {
+	margin-top: 30px;
+}
+.character-experience > .row {
+	padding: 3px;
+}
+
+.character-experienceProgress > div {
+	padding-right: 0;
+}
+
+.attributes-table {
+	margin-bottom: 20px;
+	padding: 0 30px;
+}
+.attributes-table .row > div {
+	padding: @table-cell-padding;
+	line-height: @line-height-base;
+	vertical-align: top;
+	border-top: 1px solid @table-border-color;
+}
+
+footer {
+	margin-top: 50px;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+.loadProgress {
+	margin-bottom: 0;
+}
+
+.goldInput {
+	width: 150px;
+}
+
+.noItems {
+	text-align: center;
+}

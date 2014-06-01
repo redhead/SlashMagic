@@ -1,14 +1,26 @@
 
-NewCharacterController = ($scope, characterStorage, growler) ->
+NewCharacterController = ($scope, $modalInstance, $timeout) ->
+	$scope.cancel = ->
+		$modalInstance.dismiss('cancel')
+
 	$scope.races = Races.names
 	$scope.professions = Professions.names
 	
+	$scope.pages = [ 
+		'Základní',
+		'Vlastnosti',
+		'Zázemí',
+		'Dovednosti'
+	]
+
 	$scope.part = 0
-	$scope.uniqeness = 2
-	$scope.skillPoints = 
-		physical: 0
-		psychic: 0
-		combined: 0
+
+	$scope.model = 
+		uniqueness: 2
+		skillPoints: 
+			physical: 0
+			psychic: 0
+			combined: 0
 
 	$scope.newCharacter = 
 		name: ''
@@ -25,27 +37,24 @@ NewCharacterController = ($scope, characterStorage, growler) ->
 		
 		charObj = new Character(newChar)
 
-		characterStorage.putLast charObj
-		$scope.$parent.character = charObj
-
-		growler.success
-			title: 'Postava vytvořena'
-			message: "Postava #{charObj.name} vytvořena a uložena"
+		$modalInstance.close(charObj)
 
 	$scope.goto = (part) ->
 		$scope.part = part
 
 	reset = ->
-		$scope.$broadcast 'reset'
+		$scope.$broadcast('reset')
 
 	$scope.$watch 'newCharacter.race', reset
 	$scope.$watch 'newCharacter.profession', reset
 	$scope.$watch 'newCharacter.male', reset
-	$scope.$watch 'uniqeness', reset
-	$scope.$watch 'skillPoints',
+	$scope.$watch 'model.uniqueness', reset
+	$scope.$watch 'model.skillPoints',
 		->
 			$scope.$broadcast 'resetSkillPoints'
 		true
+
+	$timeout (-> reset()), 1000
 
 
 
@@ -56,14 +65,14 @@ NewCharacterAttrsController = ($scope) ->
 		$scope.remaining = {}
 		$scope.useGenderCorrections = !$scope.newCharacter.male
 		$scope.newCharacter.attributes = Races.getAttrs($scope.newCharacter.race)
-		$scope.remainingMain = $scope.uniqeness
-		$scope.remainingSecondary = $scope.uniqeness * 2
+		$scope.remainingMain = $scope.model.uniqueness
+		$scope.remainingSecondary = $scope.model.uniqueness * 2
 		$scope.mainAttrs = Professions.getMainAttrs($scope.newCharacter.profession)
 		$scope.random = false
 
 		$scope.allocated[name] = 0 for name of $scope.newCharacter.attributes 
 		$scope.max[name] = value + 3 for name, value of $scope.newCharacter.attributes
-		$scope.max[name] = value + $scope.uniqeness for name, value of $scope.newCharacter.attributes when !$scope.isMainAttr name
+		$scope.max[name] = value + $scope.model.uniqueness for name, value of $scope.newCharacter.attributes when !$scope.isMainAttr name
 
 		for name in $scope.mainAttrs
 			$scope.newCharacter.attributes[name] += 1
@@ -104,23 +113,18 @@ NewCharacterAttrsController = ($scope) ->
 
 	computeRemaining = ->
 		main = $scope.remainingMain
-		sec = Math.min $scope.remainingSecondary, $scope.uniqeness
+		sec = Math.min $scope.remainingSecondary, $scope.model.uniqueness
 		for attrName, allocated of $scope.allocated
 			if $scope.isMainAttr attrName
-				val = Math.min main, $scope.uniqeness - allocated, $scope.max[attrName] - $scope.newCharacter.attributes[attrName]
+				val = Math.min main, $scope.model.uniqueness - allocated, $scope.max[attrName] - $scope.newCharacter.attributes[attrName]
 				$scope.remaining[attrName] = val
 			else
-				$scope.remaining[attrName] = Math.min sec, $scope.uniqeness - allocated
+				$scope.remaining[attrName] = Math.min sec, $scope.model.uniqueness - allocated
 
-	$scope.toggleRandom = ->
-		$scope.random = !$scope.random
-		if $scope.random
-			$scope.generate()
-		else
-			resetAttrs()
-
-	$scope.generate = ->
+	$scope.makeRandom = ->
+		isRandom = $scope.random
 		resetAttrs()
+		$scope.random = isRandom
 		
 		values =
 			3: [0,1,1,2,2,3]
@@ -129,8 +133,11 @@ NewCharacterAttrsController = ($scope) ->
 	
 		for attrName in Attributes.getBaseAttrs()
 			index = Math.floor (Math.random() * 6)
-			increment = values[$scope.uniqeness][index]
+			increment = values[$scope.model.uniqueness][index]
 			$scope.newCharacter.attributes[attrName] = Math.min $scope.newCharacter.attributes[attrName] + increment, $scope.max[attrName]
+
+	$scope.clearRandom = ->
+		resetAttrs()
 
 	$scope.$on 'reset', ->
 		resetAttrs()
@@ -140,6 +147,8 @@ NewCharacterAttrsController = ($scope) ->
 		for name, value of Races.getGenderCorrections($scope.newCharacter.race)
 			$scope.newCharacter.attributes[name] += if newUse then value else -value
 			$scope.max[name] += if newUse then value else -value
+
+	resetAttrs()
 
 
 
@@ -161,7 +170,7 @@ NewCharacterBackgroundController = ($scope) ->
 	]
 
 	reset = ->
-		$scope.total = (4 - $scope.uniqeness) * 5
+		$scope.total = (4 - $scope.model.uniqueness) * 5
 		$scope.remaining = {}
 		$scope.allocated = 
 			ancestry: 0
@@ -169,9 +178,9 @@ NewCharacterBackgroundController = ($scope) ->
 			skills: 0
 		$scope.professionSkillPoints = Professions.getSkillPoints($scope.newCharacter.profession)
 		
-		$scope.skillPoints.physical = $scope.professionSkillPoints.physical[0]
-		$scope.skillPoints.psychic = $scope.professionSkillPoints.psychic[0]
-		$scope.skillPoints.combined = $scope.professionSkillPoints.combined[0]
+		$scope.model.skillPoints.physical = $scope.professionSkillPoints.physical[0]
+		$scope.model.skillPoints.psychic = $scope.professionSkillPoints.psychic[0]
+		$scope.model.skillPoints.combined = $scope.professionSkillPoints.combined[0]
 
 		computeRemaining()
 
@@ -205,9 +214,9 @@ NewCharacterBackgroundController = ($scope) ->
 			$scope.allocated.skills--
 			$scope.total++
 		
-		$scope.skillPoints.physical = $scope.professionSkillPoints.physical[$scope.allocated.skills]
-		$scope.skillPoints.psychic = $scope.professionSkillPoints.psychic[$scope.allocated.skills]
-		$scope.skillPoints.combined = $scope.professionSkillPoints.combined[$scope.allocated.skills]
+		$scope.model.skillPoints.physical = $scope.professionSkillPoints.physical[$scope.allocated.skills]
+		$scope.model.skillPoints.psychic = $scope.professionSkillPoints.psychic[$scope.allocated.skills]
+		$scope.model.skillPoints.combined = $scope.professionSkillPoints.combined[$scope.allocated.skills]
 
 		$scope.newCharacter.gold = $scope.wealths[$scope.allocated.wealth]
 
@@ -221,7 +230,7 @@ NewCharacterSkillsController = ($scope) ->
 
 	reset = ->
 		$scope.selectedType = 'physical'
-		$scope.remaining = angular.copy $scope.skillPoints
+		$scope.remaining = angular.copy $scope.model.skillPoints
 
 	$scope.increase = (skillName, type) ->
 		return if $scope.remaining[type] == 0

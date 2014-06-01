@@ -444,7 +444,7 @@ class Skills
 
 
 	@getAll: ->
-		db = @database
+		db = @database.slice()
 		
 		for index, name of Weapons.shortRangeCategories
 			db.unshift
@@ -459,3 +459,8 @@ class Skills
 				type: 'combined'
 		
 		return db
+
+	@getAllAsMap: ->
+		map = {}
+		map[skill.name] = skill for skill in @getAll()
+		return map

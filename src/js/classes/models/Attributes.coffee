@@ -20,10 +20,18 @@ class Attributes
 		nbz: 'Nebezpečnost'
 		dst: 'Důstojnost'
 		
-		boj: 'Boj'
-		utok: 'Útok'
-		strelba: 'Střelba'
-		obrana: 'Obrana'
+		boj:		'Boj'
+		utok:		'Útok'
+		strelba:	'Střelba'
+		obrana:		'Obrana'
+		
+		mezZraneni: 'Mez zranění'
+		mezUnavy:	'Mez únavy'
+
+		chuze:	'Chůze'
+		spech:	'Spěch'
+		beh:	'Běh'
+		sprint:	'Sprint'
 
 
 	formulas:
@@ -37,9 +45,18 @@ class Attributes
 		dst: '(int+vol)/2+chr/2'
 		
 		#boj: depends on profession
-		utok: 'obr/2:d'
-		strelba: 'zrc/2:d'
-		obrana: 'obr/2:n'
+		utok:		'obr/2:d'
+		strelba:	'zrc/2:d'
+		obrana:		'obr/2:n'
+
+		mezZraneni: 'Odl+10'
+		mezUnavy:	'Vdr+10'
+		maxNaklad:	'Sil+21+[Atletika]'
+
+		chuze:	'rch/2+23'
+		spech:	'rch/2+26'
+		beh:	'rch/2+32'
+		sprint:	'rch/2+36'
 
 
 	constructor: (@character, @baseAttributes) ->
@@ -47,6 +64,9 @@ class Attributes
 		
 		@otherAttributes = {}
 		@otherAttributes[name] = Parser.parse(formula) for name, formula of @formulas
+
+		@otherAttributes.mezZraneni = new DamageFatigueValue(@otherAttributes.mezZraneni)
+		@otherAttributes.mezUnavy = new DamageFatigueValue(@otherAttributes.mezUnavy)
 
 
 	getRaw: (name) ->

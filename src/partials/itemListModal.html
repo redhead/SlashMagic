@@ -1,0 +1,71 @@
+
+<div class="modal-header">
+	<h4 class="modal-title">Předměty</h4>
+</div>
+<div class="modal-body">
+	<div class="row">
+		<div class="item-list">
+			<div class="left-inner-addon">
+				<span class="glyphicon glyphicon-search"></span>
+				<input type="text" ng-model="search.name" class="form-control" />
+			</div>
+			<div class="item-table">
+				<table class="table table-condensed table-hover">
+					<tr ng-repeat="item in items | filter: search" ng-click="select(item)" ng-class="{info: item.name == selectedItem.name}">
+						<td>
+							{{item.name}}
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		
+		<div class="item-detail form-horizontal" ng-show="selectedItem !== null">
+			<h3>{{selectedItem.name}}</h3>
+			<table class="table">
+				<tr>
+					<th>Váha:</th>
+					<td>{{selectedItem.weight}} kg</td>
+				</tr>
+				<tr>
+					<th>Cena:</th>
+					<td><span data-gold data-count="selectedItem.price"></span></td>
+				</tr>
+			</table>
+			
+			<div class="form-group">
+				<label class="control-label col-sm-6">Vlastní název</label>
+				<div class="col-sm-6">
+					<input type="text" ng-model="model.userItemName" class="form-control input-sm" placeholder="{{selectedItem.name}}" />
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="control-label col-sm-6">Kusů</label>
+				<div class="col-sm-6">
+					<input type="number" ng-model="model.count" step="1" min="1" class="form-control input-sm" />
+				</div>
+			</div>
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" ng-model="model.payForItem" /> Zaplatit za předmět
+				</label>
+			</div>
+			
+			<div ng-show="model.payForItem">
+				<div class="form-group">
+					<label class="control-label col-sm-6">Cena / ks</label>
+					<div class="col-sm-6">
+						<input type="number" ng-model="model.price" min="0" class="form-control input-sm" />
+					</div>
+				</div>
+				<strong>Celkem:</strong> <span data-gold data-count="model.count * model.price"></span>
+			</div>
+			<br>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="ok()" ng-show="selectedItem">Vybrat</button>
+	<button class="btn btn-default" ng-click="close()">Zavřít</button>
+</div>

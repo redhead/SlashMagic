@@ -1,0 +1,40 @@
+<form name="createForm1" ng-show="part == 0" class="newCharacter-form-0">
+	<div class="modal-body">
+		<div class="form-group">
+			<label class="control-label">Jméno postavy:</label>
+			<div>
+				<input ng-model="newCharacter.name" data-autofocus required type="text" class="span3 form-control">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label">Rasa:</label>
+			<div>
+				<select ng-model="newCharacter.race" ng-options="r for r in races" class="newCharacter-race"></select>
+				<span class="btn-group">
+					<button ng-model="newCharacter.male" btn-radio="true" class="btn btn-default">♂ muž</button>
+					<button ng-model="newCharacter.male" btn-radio="false" class="btn btn-default">♀ žena</button>
+				</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label">Povolání:</label>
+			<div>
+				<select ng-model="newCharacter.profession" ng-options="p for p in professions" class="newCharacter-profession"></select>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label">Vyjímečnost:</label>
+			<div>
+				<div class="btn-group">
+					<button ng-model="model.uniqueness" btn-radio="3" class="btn btn-default">Vlastnosti</button>
+					<button ng-model="model.uniqueness" btn-radio="2" class="btn btn-default">Vlastnosti i zázemí</button>
+					<button ng-model="model.uniqueness" btn-radio="1" class="btn btn-default">Zázemí</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-default" ng-click="cancel()">Zavřít</button>
+		<button class="btn btn-primary" ng-disabled="!createForm1.$valid" ng-click="goto(1)">Další</button>
+	</div>
+</form>

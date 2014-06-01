@@ -1,8 +1,23 @@
 
-module = angular.module 'app', ['ui.directives']
+module = angular.module 'app', ['ui.bootstrap', 'ui.router', 'localytics.directives']
 
 
-module.run ($rootScope, $timeout) ->
+module.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
+	$locationProvider.html5Mode(false)
+	$urlRouterProvider.otherwise('/')
+
+	# URL and state configuration
+	$stateProvider
+		.state 'main', { url: '/', templateUrl: 'partials/main.html' }
+		.state 'main.attributes', { url: 'vlastnosti', templateUrl: 'partials/tabs/attributes.html' }
+		.state 'main.combat', { url: 'boj', templateUrl: 'partials/tabs/combat.html' }
+		.state 'main.travel', { url: 'na-cesty', templateUrl: 'partials/tabs/travel.html' }
+		.state 'main.equipment', { url: 'vybava', templateUrl: 'partials/tabs/equipment.html'}
+		.state 'main.skills', { url: 'dovednosti', templateUrl: 'partials/tabs/skills.html'}
+
+
+# online/offline state in Angular
+module.run ($rootScope, $timeout, $state, $stateParams) ->
 	window.addEventListener 'online', ->
 		$rootScope.$broadcast('app.online')
 	
@@ -15,6 +30,7 @@ module.run ($rootScope, $timeout) ->
 		), 0
 
 
+# renders gender icon according to character.male property
 module.directive 'genderIcon', ->
 	restrict: 'EA'
 	scope:
@@ -28,6 +44,7 @@ module.directive 'genderIcon', ->
 
 
 
+# renders correct czech word for gold according to the count of gold coins
 module.directive 'gold', ->
 	restrict: 'EA'
 	scope:
@@ -45,15 +62,17 @@ module.directive 'gold', ->
 
 
 
+# links the attribute to show and position a popup with detailed information
 attrPopupLinker = ($scope, el, attrs) ->
 	$scope.attrName = attrs.name
 
 	$el = $(el)
-	$popup = $('#attr-popup')
 
 	$el.on 'mouseenter', ->
 		$scope.$apply ->
 			$scope.$emit 'showAttrTooltipRise', $scope.attr
+
+		$popup = $('#attr-popup')
 
 		$popup.show()
 
@@ -69,20 +88,22 @@ attrPopupLinker = ($scope, el, attrs) ->
 			left: pos.left + pos.width / 2 - actualWidth / 2
 
 	$el.on 'mouseleave', ->
-		$popup.hide()
+		$('#attr-popup').hide()
 
+# attribute row directive
 module.directive 'attrRow', ->
 	restrict: 'A'
 	scope: true
 	replace: true
 	isolate: false
 	template:
-		'<tr>' + 
-			'<td>{{attributes.names[attr]}}</td>' + 
-			'<td>{{character.corrAttr(attr) | attr}}</td>' +
-		'</tr>'
+		'<div class="row">' + 
+			'<div class="col-xs-9">{{attributes.names[attr]}}</div>' + 
+			'<div class="col-xs-3">{{character.corrAttr(attr) | attr}}</div>' +
+		'</div>'
 	link: attrPopupLinker
 
+# attribute filter showing + or - characters for attributes and bonuses
 module.directive 'attr', ->
 	restrict: 'E'
 	scope: true
@@ -94,13 +115,21 @@ module.directive 'attr', ->
 
 
 
+# directive to render progress bars for damage and fatigue state
 module.directive 'damageFatigueBars', ->
 	restrict: 'EA'
 	scope: true
-	templateUrl: 'damageFatigueBars.html'
+	templateUrl: 'partials/damageFatigueBars.html'
 	controller: 'DamageFatigueController'
 	link: ($scope, el, attrs, controller) ->
 		$scope.type = attrs.type
+
+
+
+module.directive 'autofocus', ->
+	restrict: 'A'
+	link: ($scope, el) ->
+		$(el).focus()
 
 
 
@@ -111,10 +140,28 @@ module.service 'Character', ['$rootScope', 'characterStorage',
 
 
 
-module.service 'GroupManager', ['characterStorage'
-	(characterStorage) ->
-		return new GroupManager(characterStorage)
+# confirm service that shows bootstrap dialog with confirm message and buttons
+module.service 'confirm', ['$modal'
+	($modal) ->
+		return {
+			show: (leadText, text, buttons, callback) ->
+				$modal.open
+					templateUrl: 'partials/confirm.html'
+					controller: 'ConfirmModalController'
+					resolve: {
+						leadText: -> leadText
+						text: -> text
+						buttons: -> buttons
+					}
+		}
 ]
+
+
+
+#module.service 'GroupManager', ['characterStorage'
+#	(characterStorage) ->
+#		return new GroupManager(characterStorage)
+#]
 
 
 
@@ -142,10 +189,12 @@ module.factory 'storage', ->
 	return new Storage
 
 
+# storage for character
 module.factory 'characterStorage', (storage) ->
 	return new CharacterStorage(storage)
 
 
+# growler
 module.factory 'growler', (storage) ->
 	show = (message, type) ->
 		options = 
@@ -165,7 +214,8 @@ module.factory 'growler', (storage) ->
 
 	return {
 		success: (message) -> show(message, 'success')
-		error: (message) -> show(message, 'error')
+		error: (message) -> show(message, 'danger')
+		danger: (message) -> show(message, 'danger')
 		info: (message) -> show(message, 'info')
 	}
 

@@ -1,0 +1,67 @@
+
+<div ng-controller="EquipmentController" class="form-horizontal">
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="row form-horizontal">
+				<div class="col-xs-2 col-sd-2 bold">Náklad</div>
+				<div class="col-xs-5">
+					<div class="row">
+						<div class="progress loadProgress">
+							<div class="progress-bar" ng-style="{width: (getLoad() * 100 / getMaxLoad()) + '%' }"></div>
+						</div>
+					</div>
+					<div class="row">
+						Naložení: {{loadLabel}}
+					</div>
+				</div>
+				<div class="col-xs-5">
+					{{getLoad() | number:2}} / {{getMaxLoad()}} kg
+					<br>
+					Postih za naložení: {{loadPenalty | attr}}
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-6 row form-group">
+			<label class="col-xs-3 control-label">Peníze:</label>
+			<div class="input-group goldInput">
+				<input type="number" ng-model="character.gold" class="form-control">
+				<span class="input-group-addon">zl</span>
+			</div>
+		</div>
+	</div>
+	<h4>Předměty</h4>
+	<table class="table">
+		<tr>
+			<th>Název</th>
+			<th>Počet</th>
+			<th>Váha (kg)</th>
+			<th>Cena (zl)</th>
+			<th></th>
+		</tr>
+		<tr ng-repeat="item in character.items" >
+			<td>{{item.name}}</td>
+			<td>{{item.count}}</td>
+			<td>{{item.weight}}</td>
+			<td>{{item.price}}</td>
+			<td>
+				<button class="btn btn-default btn-xs" ng-click="increase($index)" title="Zvýšit počet">
+					<span class="glyphicon glyphicon-plus"></span>
+				</button>
+				<button class="btn btn-default btn-xs" ng-click="decrease($index)" title="Snížit počet">
+					<span class="glyphicon glyphicon-minus"></span>
+				</button>
+				<button class="btn btn-default btn-xs" ng-click="removeItem($index)" title="Odstranit záznam">
+					<span class="glyphicon glyphicon-remove"></span>
+				</button>
+			</td>
+		</tr>
+		<tr ng-show="character.items.length === 0">
+			<td colspan="5" class="noItems">Žádné předměty</td>
+		</tr>
+		<tr>
+			<td colspan="5">
+				<button ng-click="addNewItem()" class="btn btn-default">Přidat</button>
+			</td>
+		</tr>
+	</table>
+</div>
