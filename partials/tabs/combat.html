@@ -1,0 +1,11 @@
+
+<div data-ng-controller="CombatController">
+	<div class="row">
+		<div class="col-sm-3 attributes-table">
+			<div attr-row data-ng-repeat="attr in ['boj', 'utok', 'strelba', 'obrana']"></div>
+		</div>
+		<div class="col-sm-9">
+			<div data-damage-fatigue-bars data-type="damage"></div>
+		</div>
+	</div>
+</div>

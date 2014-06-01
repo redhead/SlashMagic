@@ -383,9 +383,33 @@ SM.database.items = {
 
 var attrPopupLinker, module;
 
-module = angular.module('app', ['ngRoute', 'ui.bootstrap']);
+module = angular.module('app', ['ui.bootstrap', 'ui.router', 'localytics.directives']);
 
-module.run(function($rootScope, $timeout) {
+module.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
+  $locationProvider.html5Mode(false);
+  $urlRouterProvider.otherwise('/');
+  return $stateProvider.state('main', {
+    url: '/',
+    templateUrl: 'partials/main.html'
+  }).state('main.attributes', {
+    url: 'vlastnosti',
+    templateUrl: 'partials/tabs/attributes.html'
+  }).state('main.combat', {
+    url: 'boj',
+    templateUrl: 'partials/tabs/combat.html'
+  }).state('main.travel', {
+    url: 'na-cesty',
+    templateUrl: 'partials/tabs/travel.html'
+  }).state('main.equipment', {
+    url: 'vybava',
+    templateUrl: 'partials/tabs/equipment.html'
+  }).state('main.skills', {
+    url: 'dovednosti',
+    templateUrl: 'partials/tabs/skills.html'
+  });
+});
+
+module.run(function($rootScope, $timeout, $state, $stateParams) {
   window.addEventListener('online', function() {
     return $rootScope.$broadcast('app.online');
   });
@@ -470,7 +494,7 @@ module.directive('attrRow', function() {
     scope: true,
     replace: true,
     isolate: false,
-    template: '<tr>' + '<td>{{attributes.names[attr]}}</td>' + '<td>{{character.corrAttr(attr) | attr}}</td>' + '</tr>',
+    template: '<div class="row">' + '<div class="col-xs-9">{{attributes.names[attr]}}</div>' + '<div class="col-xs-3">{{character.corrAttr(attr) | attr}}</div>' + '</div>',
     link: attrPopupLinker
   };
 });
@@ -600,7 +624,10 @@ module.factory('growler', function(storage) {
       return show(message, 'success');
     },
     error: function(message) {
-      return show(message, 'error');
+      return show(message, 'danger');
+    },
+    danger: function(message) {
+      return show(message, 'danger');
     },
     info: function(message) {
       return show(message, 'info');
@@ -930,7 +957,7 @@ NewCharacterSkillsController = function($scope) {
   return $scope.$on('resetSkillPoints', reset);
 };
 
-var Constant, Divide, Interpreter, Minus, Parser, Plus, Times, UniMinus, UniPlus, Variable;
+var Constant, DamageFatigueValue, Divide, Interpreter, Minus, Parser, Plus, Skill, SkillToken, Times, UniMinus, UniPlus, Variable;
 
 Interpreter = {
   interpret: function(expression, context) {
@@ -941,14 +968,20 @@ Interpreter = {
 };
 
 Parser = {
+  skillRE: /^\[([^\]]+)]/,
   isOperator: function(c) {
     return c.match(/\+|-|\*|\//) !== null;
+  },
+  isSkill: function(c) {
+    return c.match(Parser.skillRE) !== null;
   },
   createAST: function(queue, rounding) {
     var left, right, t;
     t = queue.pop();
     if (!isNaN(t)) {
       return new Constant(t);
+    } else if (t instanceof SkillToken) {
+      return new Skill(t.skillName);
     } else if (Parser.isOperator(t)) {
       right = Parser.createAST(queue, rounding);
       left = Parser.createAST(queue, rounding);
@@ -997,6 +1030,11 @@ Parser = {
       c = expression[0];
       if (Parser.isOperator(c) || c === '(' || c === ')') {
         t = c;
+      } else if (Parser.isSkill(expression)) {
+        m = expression.match(Parser.skillRE);
+        if (m != null) {
+          t = new SkillToken(m[1]);
+        }
       } else {
         m = expression.match(/^[a-zA-Z0-9]+/);
         if (m != null) {
@@ -1013,6 +1051,8 @@ Parser = {
     while (token()) {
       if (!isNaN(t)) {
         outputQ.push(parseInt(t));
+      } else if (t instanceof SkillToken) {
+        outputQ.push(t);
       } else if (Parser.isOperator(t)) {
         while (stack.length) {
           o2 = last(stack);
@@ -1023,6 +1063,8 @@ Parser = {
             break;
           }
         }
+        stack.push(t);
+      } else if (Parser.isSkill(t)) {
         stack.push(t);
       } else if (t === '(') {
         stack.push(t);
@@ -1056,6 +1098,16 @@ Parser = {
     return Parser.createAST(outputQ, rounding);
   }
 };
+
+SkillToken = (function() {
+  function SkillToken(skillName) {
+    this.skillName = skillName;
+    this.length = this.skillName.length + 2;
+  }
+
+  return SkillToken;
+
+})();
 
 Constant = (function() {
   function Constant(val) {
@@ -1172,6 +1224,34 @@ Divide = (function() {
   };
 
   return Divide;
+
+})();
+
+Skill = (function() {
+  function Skill(skillName) {
+    this.skillName = skillName;
+  }
+
+  Skill.prototype.interpret = function(context) {
+    return context.getSkill(this.skillName).level;
+  };
+
+  return Skill;
+
+})();
+
+DamageFatigueValue = (function() {
+  function DamageFatigueValue(value) {
+    this.value = value;
+  }
+
+  DamageFatigueValue.prototype.interpret = function(context) {
+    var result;
+    result = this.value.interpret(this.context);
+    return DamageTable.getPoints(result);
+  };
+
+  return DamageFatigueValue;
 
 })();
 
@@ -1542,23 +1622,68 @@ Skills = (function() {
     return db;
   };
 
+  Skills.getAllAsMap = function() {
+    var map, skill, _i, _len, _ref;
+    map = {};
+    _ref = this.getAll();
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      skill = _ref[_i];
+      map[skill.name] = skill;
+    }
+    return map;
+  };
+
   return Skills;
 
 })();
 
-$(function() {
-  var $body;
-  $('#createCharacterModal').on('show', function() {
-    return setTimeout((function() {
-      return $('#createCharacterModal').find('input').first().focus();
-    }), 200);
-  });
-  return $body = $('body').on('show', '.modal', function() {
-    return $body.addClass('modal-open');
-  }).on('hide', '.modal', function() {
-    return $body.removeClass('modal-open');
-  });
-});
+var WeightTable;
+
+WeightTable = (function() {
+  function WeightTable() {}
+
+  WeightTable.table = [0.1, 0.11, 0.12, 0.14, 0.16, 0.18, 0.2, 0.22, 0.25, 0.28, 0.32, 0.36, 0.4, 0.45, 0.5, 0.56, 0.63, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.5, 2.8, 3.2, 3.6, 4, 4.5, 5, 5.6, 6.3, 7, 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 25, 28, 32, 36, 40, 45, 50, 56, 63, 70, 8, 90, 100, 110, 120, 140, 160, 180, 200, 220, 250, 280, 320, 360, 400, 450, 500, 560, 630, 700, 800, 900, 1000, 1200, 1400, 1600, 1800, 2000, 2200, 2200, 2500, 2800, 3200, 2600, 4000, 4500, 5000, 5600, 6300, 7000, 8000, 9000];
+
+  WeightTable.getWeight = function(bonus) {
+    var idx;
+    idx = bonus + 40;
+    if (idx < 0) {
+      return this.table[0];
+    }
+    if (idx >= this.table.length) {
+      return this.table[this.table.length - 1];
+    }
+    return this.table[idx];
+  };
+
+  WeightTable.getBonus = function(weight) {
+    var bonus, i, middle, w, w2, _i, _len, _ref;
+    _ref = this.table;
+    for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+      w = _ref[i];
+      bonus = i - 40;
+      if (w === weight) {
+        return bonus;
+      }
+      if (w > weight) {
+        if (i > 0) {
+          w2 = this.table[i - 1];
+          middle = (w + w2) / 2;
+          if (weight < middle) {
+            return bonus - 1;
+          } else {
+            return bonus;
+          }
+        } else {
+          return bonus;
+        }
+      }
+    }
+  };
+
+  return WeightTable;
+
+})();
 
 var Weapons;
 
@@ -2552,19 +2677,18 @@ DamageFatigueController = function($scope, $attrs, growler) {
 
 var EquipmentController;
 
-EquipmentController = function($scope, $modal, confirm) {
+EquipmentController = function($scope, $modal, confirm, growler) {
+  var getLoadLabel, getLoadPenalty;
   $scope.addNewItem = function() {
     var confirmPrice, dialog;
     dialog = $modal.open({
-      templateUrl: 'partials/itemList.html',
+      templateUrl: 'partials/itemListModal.html',
       controller: 'ItemListController',
       resolve: {
         confirmCallback: function() {
           return function(result, success, reject) {
-            if (result.pay) {
-              if ($scope.character.gold < result.totalPrice) {
-                return confirmPrice(result, success, reject);
-              }
+            if (result.pay && $scope.character.gold < result.totalPrice) {
+              return confirmPrice(result, success, reject);
             } else {
               return success();
             }
@@ -2627,7 +2751,7 @@ EquipmentController = function($scope, $modal, confirm) {
       return $scope.removeItem(itemIdx);
     }
   };
-  return $scope.getLoad = function() {
+  $scope.getLoad = function() {
     var item, load, _i, _len, _ref;
     load = 0;
     _ref = $scope.character.items;
@@ -2636,6 +2760,51 @@ EquipmentController = function($scope, $modal, confirm) {
       load += item.weight * item.count;
     }
     return load;
+  };
+  $scope.getMaxLoad = function() {
+    var max;
+    max = $scope.character.corrAttr('maxNaklad');
+    return WeightTable.getWeight(max);
+  };
+  $scope.$watch('character.items', (function() {
+    var bonus, load, missingStrength;
+    load = $scope.getLoad();
+    bonus = WeightTable.getBonus(load);
+    missingStrength = bonus - $scope.character.corrAttr('sil');
+    $scope.loadLabel = getLoadLabel(missingStrength);
+    $scope.loadPenalty = getLoadPenalty(missingStrength);
+    if (load > $scope.getMaxLoad()) {
+      return growler.error({
+        title: 'Příliš velký náklad!',
+        message: 'Postava má příliš velký náklad a nemůže se skoro hýbat.'
+      });
+    }
+  }), true);
+  getLoadLabel = function(missingStrength) {
+    var athletLevel, label, labels, offset;
+    athletLevel = $scope.character.getSkill('Atletika').level;
+    labels = {
+      0: 'žádné',
+      6: 'mírné',
+      12: 'střední',
+      17: 'velké',
+      21: 'extrémní'
+    };
+    for (offset in labels) {
+      label = labels[offset];
+      if (missingStrength <= parseInt(offset) + athletLevel) {
+        return label;
+      }
+    }
+  };
+  return getLoadPenalty = function(missingStrength) {
+    var penalty;
+    penalty = Math.round(missingStrength / 2);
+    if (penalty >= 0) {
+      return -penalty;
+    } else {
+      return 0;
+    }
   };
 };
 
@@ -2683,10 +2852,152 @@ ItemListController = function($scope, $modalInstance, confirmCallback) {
   };
 };
 
+var LevelUpController,
+  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+LevelUpController = function($scope, $modalInstance, character) {
+  var getMains, getSecondaries, getSkillOptions, main, mainAttrs, selectedMain, switchWith, _i, _len, _ref, _ref1;
+  mainAttrs = Professions.getMainAttrs(character.profession);
+  getMains = function() {
+    var attr, mains, _i, _len;
+    mains = [];
+    for (_i = 0, _len = mainAttrs.length; _i < _len; _i++) {
+      attr = mainAttrs[_i];
+      mains.push({
+        attr: attr,
+        label: Attributes.names[attr]
+      });
+    }
+    return mains;
+  };
+  getSecondaries = function() {
+    var attr, secondaries, _i, _len, _ref;
+    secondaries = [];
+    _ref = Attributes.getBaseAttrs();
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      attr = _ref[_i];
+      if (__indexOf.call(mainAttrs, attr) < 0) {
+        secondaries.push({
+          attr: attr,
+          label: Attributes.names[attr],
+          used: __indexOf.call(character.leveledUpAttributes, attr) >= 0
+        });
+      }
+    }
+    return secondaries;
+  };
+  getSkillOptions = function() {
+    var i, points, skill, skillMap, skillName, skillOpt, skillOptions, _i, _j, _len, _ref, _ref1;
+    skillMap = Skills.getAllAsMap();
+    _ref = character.skills;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      skill = _ref[_i];
+      skillOpt = skillMap[skill.name];
+      skillOpt.disabled = skill.level === 3;
+      points = '';
+      for (i = _j = 1, _ref1 = skill.level; 1 <= _ref1 ? _j <= _ref1 : _j >= _ref1; i = 1 <= _ref1 ? ++_j : --_j) {
+        points += '\u2022 ';
+      }
+      skillOpt.label = points + skill.name;
+    }
+    skillOptions = [];
+    for (skillName in skillMap) {
+      skillOpt = skillMap[skillName];
+      if (skillOpt.label == null) {
+        skillOpt.label = skillOpt.name;
+      }
+      skillOptions.push(skillOpt);
+    }
+    return skillOptions;
+  };
+  $scope.mains = getMains();
+  $scope.secondaries = getSecondaries();
+  $scope.skillOptions = [getSkillOptions(), getSkillOptions()];
+  switchWith = function(arr) {
+    return function(newSkill, oldSkill) {
+      var skill, _i, _len, _ref, _results;
+      _ref = $scope.skillOptions[arr];
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        skill = _ref[_i];
+        if (skill.name === newSkill) {
+          skill.disabled = true;
+        }
+        if (skill.name === oldSkill) {
+          _results.push(skill.disabled = false);
+        } else {
+          _results.push(void 0);
+        }
+      }
+      return _results;
+    };
+  };
+  $scope.$watch('levelUp.skills[0]', switchWith(1), true);
+  $scope.$watch('levelUp.skills[1]', switchWith(0), true);
+  if (character.leveledUpAttributes.length > 0) {
+    _ref = $scope.mains;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      main = _ref[_i];
+      if (_ref1 = main.attr, __indexOf.call(character.leveledUpAttributes, _ref1) < 0) {
+        selectedMain = main.attr;
+      }
+    }
+  }
+  $scope.levelUp = {
+    main: selectedMain != null ? selectedMain : null,
+    secondary: null,
+    skills: []
+  };
+  $scope.isOk = function() {
+    return ($scope.levelUp.main != null) && ($scope.levelUp.secondary != null);
+  };
+  $scope.ok = function() {
+    return $modalInstance.close({
+      attributes: [$scope.levelUp.main, $scope.levelUp.secondary],
+      skills: $scope.levelUp.skills
+    });
+  };
+  return $scope.cancel = function() {
+    return $modalInstance.dismiss('cancel');
+  };
+};
+
 var MainController;
 
-MainController = function($scope, $rootScope, Character, growler, $timeout, $modal, characterStorage) {
-  var notifyOnline;
+MainController = function($scope, $rootScope, Character, growler, $timeout, $modal, characterStorage, $state) {
+  var heading, notifyOnline, pages, state;
+  pages = {
+    'main.attributes': 'Vlastnosti',
+    'main.combat': 'Boj',
+    'main.travel': 'Na cesty',
+    'main.equipment': 'Výbava',
+    'main.skills': 'Dovednosti'
+  };
+  $scope.tabs = [];
+  for (state in pages) {
+    heading = pages[state];
+    $scope.tabs.push({
+      state: state,
+      heading: heading,
+      active: false
+    });
+  }
+  $scope.go = function(state) {
+    return $state.go(state);
+  };
+  $scope.isTabActive = function(state) {
+    return $state.is(state);
+  };
+  $scope.$on('$stateChangeSuccess', function() {
+    var tab, _i, _len, _ref, _results;
+    _ref = $scope.tabs;
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      tab = _ref[_i];
+      _results.push(tab.active = $state.is(tab.state));
+    }
+    return _results;
+  });
   $scope.character = Character.currentCharacter;
   $scope.attributes = Attributes;
   $scope.$on('showAttrTooltipRise', function(event, attrName) {
@@ -2718,7 +3029,7 @@ MainController = function($scope, $rootScope, Character, growler, $timeout, $mod
       message: 'Používá se lokální úložiště'
     });
   });
-  return $scope.createCharacter = function() {
+  $scope.createCharacter = function() {
     var dialog;
     dialog = $modal.open({
       templateUrl: 'partials/createCharacterForms.html',
@@ -2733,11 +3044,51 @@ MainController = function($scope, $rootScope, Character, growler, $timeout, $mod
       });
     });
   };
+  return $scope.openLevelUpDialog = function() {
+    var dialog;
+    dialog = $modal.open({
+      templateUrl: 'partials/levelUpModal.html',
+      controller: 'LevelUpController',
+      resolve: {
+        character: function() {
+          return $scope.character;
+        }
+      }
+    });
+    return dialog.result.then(function(result) {
+      return $scope.character.levelUp(result);
+    });
+  };
 };
 
-var SelectArmorController;
+var SkillController;
 
-SelectArmorController = function($scope) {};
+SkillController = function($scope) {
+  var updateSkillModel;
+  $scope.$watch('character.skills', (function() {
+    return updateSkillModel();
+  }), true);
+  $scope.skills = {};
+  updateSkillModel = function() {
+    var s, skill, skillMap, _i, _len, _ref, _results;
+    skillMap = Skills.getAllAsMap();
+    $scope.skills = {
+      physical: [],
+      psychic: [],
+      combined: []
+    };
+    _ref = $scope.character.skills;
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      skill = _ref[_i];
+      s = skillMap[skill.name];
+      s.level = skill.level;
+      _results.push($scope.skills[s.type].push(s));
+    }
+    return _results;
+  };
+  return updateSkillModel();
+};
 
 var CharacterService;
 
@@ -2803,7 +3154,13 @@ Attributes = (function() {
     boj: 'Boj',
     utok: 'Útok',
     strelba: 'Střelba',
-    obrana: 'Obrana'
+    obrana: 'Obrana',
+    mezZraneni: 'Mez zranění',
+    mezUnavy: 'Mez únavy',
+    chuze: 'Chůze',
+    spech: 'Spěch',
+    beh: 'Běh',
+    sprint: 'Sprint'
   };
 
   Attributes.prototype.formulas = {
@@ -2816,7 +3173,14 @@ Attributes = (function() {
     dst: '(int+vol)/2+chr/2',
     utok: 'obr/2:d',
     strelba: 'zrc/2:d',
-    obrana: 'obr/2:n'
+    obrana: 'obr/2:n',
+    mezZraneni: 'Odl+10',
+    mezUnavy: 'Vdr+10',
+    maxNaklad: 'Sil+21+[Atletika]',
+    chuze: 'rch/2+23',
+    spech: 'rch/2+26',
+    beh: 'rch/2+32',
+    sprint: 'rch/2+36'
   };
 
   function Attributes(character, baseAttributes) {
@@ -2830,6 +3194,8 @@ Attributes = (function() {
       formula = _ref[name];
       this.otherAttributes[name] = Parser.parse(formula);
     }
+    this.otherAttributes.mezZraneni = new DamageFatigueValue(this.otherAttributes.mezZraneni);
+    this.otherAttributes.mezUnavy = new DamageFatigueValue(this.otherAttributes.mezUnavy);
   }
 
   Attributes.prototype.getRaw = function(name) {
@@ -2879,28 +3245,33 @@ Attributes = (function() {
 
 })();
 
-var Character;
+var Character,
+  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 Character = (function() {
   function Character(character) {
-    var _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
+    var _ref, _ref1, _ref10, _ref11, _ref12, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
     this.name = character.name;
     this.profession = character.profession;
     this.race = character.race;
     this.male = character.male;
     this.background = (_ref = character.background) != null ? _ref : "";
-    this.items = (_ref1 = character.items) != null ? _ref1 : [];
-    this.gold = (_ref2 = character.gold) != null ? _ref2 : 0;
+    this.skills = (_ref1 = character.skills) != null ? _ref1 : [];
+    this.level = (_ref2 = character.level) != null ? _ref2 : 1;
+    this.experience = (_ref3 = character.experience) != null ? _ref3 : 0;
+    this.items = (_ref4 = character.items) != null ? _ref4 : [];
+    this.gold = (_ref5 = character.gold) != null ? _ref5 : 0;
     this.attributes = new Attributes(this, character.attributes);
-    this.corrections = (_ref3 = character.corrections) != null ? _ref3 : [];
-    this.damage = (_ref4 = character.damage) != null ? _ref4 : 0;
-    this.fatigue = (_ref5 = character.fatigue) != null ? _ref5 : 0;
-    this.penalties = (_ref6 = character.penalties) != null ? _ref6 : {
+    this.corrections = (_ref6 = character.corrections) != null ? _ref6 : [];
+    this.leveledUpAttributes = (_ref7 = character.leveledUpAttributes) != null ? _ref7 : {};
+    this.damage = (_ref8 = character.damage) != null ? _ref8 : 0;
+    this.fatigue = (_ref9 = character.fatigue) != null ? _ref9 : 0;
+    this.penalties = (_ref10 = character.penalties) != null ? _ref10 : {
       damage: 0,
       fatigue: 0
     };
-    this.armor = (_ref7 = character.armor) != null ? _ref7 : 'Beze zbroje';
-    this.helmet = (_ref8 = character.helmet) != null ? _ref8 : 'Bez pokrývky hlavy';
+    this.armor = (_ref11 = character.armor) != null ? _ref11 : 'Beze zbroje';
+    this.helmet = (_ref12 = character.helmet) != null ? _ref12 : 'Bez pokrývky hlavy';
   }
 
   Character.prototype.attr = function(attrName, value) {
@@ -2928,6 +3299,57 @@ Character = (function() {
 
   Character.prototype.attrs = function() {
     return this.attributes.attrs();
+  };
+
+  Character.prototype.getSkill = function(skillName) {
+    var skill, _i, _len, _ref;
+    _ref = this.skills;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      skill = _ref[_i];
+      if (skill.name === skillName) {
+        return skill;
+      }
+    }
+    return {
+      name: skillName,
+      level: 0
+    };
+  };
+
+  Character.prototype.getExperienceNeeded = function() {
+    return DamageTable.getPoints(this.level + 15);
+  };
+
+  Character.prototype.levelUp = function(props) {
+    var attr, leveledSkills, skill, skillName, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _ref3;
+    this.leveledUpAttributes = props.attributes;
+    _ref = props.attributes;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      attr = _ref[_i];
+      this.attr(attr, this.attr(attr) + 1);
+    }
+    leveledSkills = [];
+    _ref1 = this.skills;
+    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+      skill = _ref1[_j];
+      if (!(_ref2 = skill.name, __indexOf.call(props.skills, _ref2) >= 0)) {
+        continue;
+      }
+      skill.level += 1;
+      leveledSkills.push(skill.name);
+    }
+    _ref3 = props.skills;
+    for (_k = 0, _len2 = _ref3.length; _k < _len2; _k++) {
+      skillName = _ref3[_k];
+      if (__indexOf.call(leveledSkills, skillName) < 0) {
+        this.skills.push({
+          name: skillName,
+          level: 1
+        });
+      }
+    }
+    this.experience = this.experience - this.getExperienceNeeded();
+    return this.level += 1;
   };
 
   Character.prototype.toPlainObject = function() {

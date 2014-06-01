@@ -1,10 +1,12 @@
 <!doctype html>
-<html ng-app="app">
+<html data-ng-app="app">
 	<head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		
+		<script>
+			document.write('<base href="' + window.location +'" />')
+		</script>
         
 		<title>SlashMagic</title>
 
@@ -14,155 +16,44 @@
                 padding-bottom: 40px;
             }
         </style>
-        <link rel="stylesheet" href="css/style.css">
-        <link rel="stylesheet" href="css/main.css">
-        <link rel="stylesheet" href="lib/angular-ui/build/angular-ui.min.css">
+		<link rel="stylesheet" href="css/style.css">
+		<link rel="stylesheet" href="css/main.css">
+		<link rel="stylesheet" href="lib/angular-ui/build/angular-ui.min.css">
+		<link rel="stylesheet" href="lib/chosen/chosen.min.css">
 
-        <script src="lib/jquery/dist/jquery.js"></script>
+		<script src="lib/jquery/dist/jquery.js"></script>
 
-        <script src="lib/bootstrap/dist/js/bootstrap.js"></script>
-        <script src="js/vendor/jquery.bootstrap-growl.min.js"></script>
+		<script src="lib/bootstrap/dist/js/bootstrap.js"></script>
+		<script src="js/vendor/jquery.bootstrap-growl.min.js"></script>
 
-        <script src="lib/angular/angular.js"></script>
-        <script src="lib/angular-route/angular-route.js"></script>
-        <script src="lib/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-        <script src="lib/angular-i18n/angular-locale_cs-cz.js"></script>
+		<script src="lib/angular/angular.js"></script>
+		<script src="lib/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+		<script src="lib/angular-ui-router/release/angular-ui-router.js"></script>
+		<script src="lib/angular-i18n/angular-locale_cs-cz.js"></script>
+
+		<script src="lib/chosen/chosen.jquery.min.js"></script>
+		<script src="lib/angular-chosen-localytics/chosen.js"></script>
 
         <script src="lib/json2/cycle.js"></script>
-        <script src="lib/json2/json2.js"></script>
+		<script src="lib/json2/json2.js"></script>
 
-        <script src="js/all.js"></script>
+		<script src="js/all.js"></script>
     </head>
-    <body ng-controller="MainController">
+    <body data-ng-controller="MainController">
+		<div data-ng-include="'menu.html'"></div>
+		
+		<div data-ng-include="'attrPopup.html'"></div>
 
-<!--        <div ng-controller="SelectArmorController" id="selectArmorModal" class="fade modal hide in">
-			include('src/selectArmorForm.html')
-        </div>-->
+        <div class="container" data-ng-show="character !== null">
 
-		<div ng-include="'menu.html'"></div>
+            <div data-ng-include="'partials/characterHeader.html'"></div>
 
-        <div class="container">
-            <div class="jumbotron">
-                <h1>
-                    {{character.name}}
-                </h1>
-                <h3>{{character.race}}, {{character.profession}} <span data-gender-icon data-character="character"></span></h3>
-                <p>{{character.background}}</p>
-            </div>
-
-			<div ng-include="'attrPopup.html'"></div>
-
-            <h3>Vlastnosti</h3>
-			<div class="row">
-				<div class="col-sm-3">
-					<table class="table">
-						<tr attr-row ng-repeat="attr in ['sil', 'obr', 'zrc']"></tr>
-					</table>
-				</div>
-				<div class="col-sm-3">
-					<table class="table">
-						<tr attr-row ng-repeat="attr in ['vol', 'int', 'chr']"></tr>
-					</table>
-				</div>
-				<div class="col-sm-3">
-					<table class="table">
-						<tr attr-row ng-repeat="attr in ['odl', 'vdr', 'rch', 'sms']"></tr>
-					</table>
-				</div>
-				<div class="col-sm-3">
-					<table class="table">
-						<tr attr-row ng-repeat="attr in ['krs', 'nbz', 'dst']"></tr>
-					</table>
-				</div>
-				<div class="col-sm-3">
-					<table class="table">
-						<tr attr-row ng-repeat="attr in ['vel', 'hmt', 'vys']"></tr>
-					</table>
-				</div>
-			</div>
-
-            <h3>Boj</h3>
-			<div ng-controller="CombatController">
-				<div ng-controller="SelectArmorController" id="selectArmorModal" class="fade modal hide in">
-					<div ng-include="selectArmorController.html"></div>
-				</div>
-				
-				<div class="row">
-					<div class="col-sm-3">
-						<table class="table">
-							<tr attr-row ng-repeat="attr in ['boj', 'utok', 'strelba', 'obrana']"></tr>
-						</table>
-					</div>
-					
-					<div class="col-sm-3">
-						Zbroj: {{armor.protection}} / {{helmet.protection}}
-						<ul class="list-unstyled">
-							<li>
-								{{armor.name}}
-								<a href="#selectArmorModal" class="btn btn-default btn-sm" data-toggle="modal" ng-click="selectArmorType = 'armor'">Vybrat zbroj</a>
-							</li>
-							<li>
-								{{helmet.name}}
-								<a href="#selectArmorModal" class="btn btn-default btn-sm" data-toggle="modal" ng-click="selectArmorType = 'helmet'">Vybrat přilbu</a>
-							</li>
-						</ul>
-					</div>
-					
-					
-				</div>
-			</div>
-
-            <div data-damage-fatigue-bars data-type="damage"></div>
-
-            <h3>Na cesty</h3>
-            <div data-damage-fatigue-bars data-type="fatigue"></div>
-
-			<h3>Výbava</h3>
-			<div ng-controller="EquipmentController">
-				<div>Peníze: <span data-gold data-count="character.gold"></span></div>
-<!--				<div>
-					Náklad
-					<div class="progress">
-						<div class="progress-bar" ng-style="{width: getLoad() * 100 / getMaxLoad() }">{{getLoad() | number:2}} / {{getMaxLoad()}} kg</div>
-					</div>
-				</div>-->
-				<table class="table">
-					<tr>
-						<th>Předmět</th>
-						<th>Počet</th>
-						<th>Váha (kg)</th>
-						<th>Cena (zl)</th>
-						<th></th>
-					</tr>
-					<tr ng-repeat="item in character.items" >
-						<td>{{item.name}}</td>
-						<td>{{item.count}}</td>
-						<td>{{item.weight}}</td>
-						<td>{{item.price}}</td>
-						<td>
-							<button class="btn btn-default button-xs" ng-click="increase($index)" title="Zvýšit počet">
-								<span class="glyphicon glyphicon-plus"></span>
-							</button>
-							<button class="btn btn-default button-xs" ng-click="decrease($index)" title="Snížit počet">
-								<span class="glyphicon glyphicon-minus"></span>
-							</button>
-							<button class="btn btn-default button-xs" ng-click="removeItem($index)" title="Odstranit záznam">
-								<span class="glyphicon glyphicon-remove"></span>
-							</button>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="5">
-							<button ng-click="addNewItem()" class="btn btn-default">Přidat</button>
-						</td>
-					</tr>
-				</table>
-			</div>
+			<div data-ui-view></div>
 			
             <hr>
 
             <footer>
-                <p>© Radek Ježdík 2012</p>
+                <p>© Radek Ježdík 2014</p>
             </footer>
 
         </div>

@@ -1,21 +1,21 @@
-<form ng-controller="NewCharacterBackgroundController" name="createForm3" ng-show="part == 2" class="form-horizontal modal-form">
+<form data-ng-controller="NewCharacterBackgroundController" name="createForm3" data-ng-show="part == 2" class="form-horizontal modal-form">
 	<div class="modal-body attrs-modal-body">
 		<p>Bodů zázemí: {{total}}</p>
 		<table class="table table-condensed table-hover table-background">
-			<tr ng-repeat="type in types" ng-class="{info: isMainAttr(attr)}">
+			<tr data-ng-repeat="type in types" data-ng-class="{info: isMainAttr(attr)}">
 				<td>{{names[type]}}</td>
 				<td>{{allocated[type]}}</td>
 				<td>
 					<div class="pull-right">
-						<a href ng-click="increase(type)"><i class="glyphicon glyphicon-chevron-up"></i></a>
-						<a href ng-click="decrease(type)"><i class="glyphicon glyphicon-chevron-down"></i></a>
+						<a href data-ng-click="increase(type)"><i class="glyphicon glyphicon-chevron-up"></i></a>
+						<a href data-ng-click="decrease(type)"><i class="glyphicon glyphicon-chevron-down"></i></a>
 					</div>
 				</td>
 				<td>{{remaining[type]}}</td>
-				<td ng-switch on="type">
-					<span ng-switch-when="ancestry">{{ancestries[allocated[type]]}}</span>
-					<span ng-switch-when="wealth" gold data-count="wealths[allocated[type]]"></span>
-					<div ng-switch-when="skills">
+				<td data-ng-switch on="type">
+					<span data-ng-switch-when="ancestry">{{ancestries[allocated[type]]}}</span>
+					<span data-ng-switch-when="wealth" gold data-count="wealths[allocated[type]]"></span>
+					<div data-ng-switch-when="skills">
 						<div>Fyzické: {{model.skillPoints.physical}}</div>
 						<div>Psychické: {{model.skillPoints.psychic}}</div>
 						<div>Kombinované: {{model.skillPoints.combined}}</div>
@@ -25,8 +25,8 @@
 		</table>
 	</div>
 	<div class="modal-footer">
-		<a href="" class="btn btn-default" ng-click="cancel()">Zavřít</a>
-		<button class="btn btn-default" ng-click="goto(1)">Zpět</button>
-		<button class="btn btn-primary" ng-click="goto(3)">Další</button>
+		<a href="" class="btn btn-default" data-ng-click="cancel()">Zavřít</a>
+		<button class="btn btn-default" data-ng-click="goto(1)">Zpět</button>
+		<button class="btn btn-primary" data-ng-click="goto(3)">Další</button>
 	</div>
 </form>

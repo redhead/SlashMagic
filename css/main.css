@@ -2,13 +2,3 @@ body.modal-open {
     overflow: hidden;
 }
 
-
-.progress-bars {
-	margin-top: 5px;
-}
-.progress-bars td {
-	padding-left: 10px;
-}
-.progress-bars .progress {
-	margin-bottom: 0;
-}
