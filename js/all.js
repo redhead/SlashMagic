@@ -386,7 +386,7 @@ var attrPopupLinker, module;
 module = angular.module('app', ['ui.bootstrap', 'ui.router', 'localytics.directives']);
 
 module.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
-  $locationProvider.html5Mode(false);
+  $locationProvider.html5Mode(true);
   $urlRouterProvider.otherwise('/');
   return $stateProvider.state('main', {
     url: '/',
@@ -2510,52 +2510,6 @@ Weapons = (function() {
 
 })();
 
-var CharacterStorage, Storage;
-
-Storage = (function() {
-  function Storage() {}
-
-  Storage.prototype.put = function(key, value) {
-    var json;
-    json = JSON.stringify(JSON.decycle(value));
-    return localStorage.setItem(key, json);
-  };
-
-  Storage.prototype.get = function(key, value) {
-    var json;
-    json = localStorage.getItem(key);
-    return JSON.retrocycle(JSON.parse(json));
-  };
-
-  return Storage;
-
-})();
-
-CharacterStorage = (function() {
-  function CharacterStorage(storage) {
-    this.storage = storage;
-  }
-
-  CharacterStorage.prototype.putLast = function(character) {
-    var obj;
-    obj = character.toPlainObject();
-    return this.storage.put('last', obj);
-  };
-
-  CharacterStorage.prototype.getLast = function() {
-    var obj;
-    obj = this.storage.get('last');
-    if (obj) {
-      return new Character(obj);
-    } else {
-      return null;
-    }
-  };
-
-  return CharacterStorage;
-
-})();
-
 var AttrPopupController;
 
 AttrPopupController = function($scope, $filter) {
@@ -3087,6 +3041,52 @@ SkillController = function($scope) {
   };
   return updateSkillModel();
 };
+
+var CharacterStorage, Storage;
+
+Storage = (function() {
+  function Storage() {}
+
+  Storage.prototype.put = function(key, value) {
+    var json;
+    json = JSON.stringify(JSON.decycle(value));
+    return localStorage.setItem(key, json);
+  };
+
+  Storage.prototype.get = function(key, value) {
+    var json;
+    json = localStorage.getItem(key);
+    return JSON.retrocycle(JSON.parse(json));
+  };
+
+  return Storage;
+
+})();
+
+CharacterStorage = (function() {
+  function CharacterStorage(storage) {
+    this.storage = storage;
+  }
+
+  CharacterStorage.prototype.putLast = function(character) {
+    var obj;
+    obj = character.toPlainObject();
+    return this.storage.put('last', obj);
+  };
+
+  CharacterStorage.prototype.getLast = function() {
+    var obj;
+    obj = this.storage.get('last');
+    if (obj) {
+      return new Character(obj);
+    } else {
+      return null;
+    }
+  };
+
+  return CharacterStorage;
+
+})();
 
 var CharacterService;
 
