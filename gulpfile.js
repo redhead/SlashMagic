@@ -45,12 +45,12 @@ gulp.task('scripts', function() {
 });
 
 gulp.task('manifest', function() {
-	gulp.src('dist/**/*')
+	gulp.src(['dist/**/*', '!**/*.less'])
 		.pipe(manifest({
 			timestamp: true,
 			network: ['http://*', 'https://*', '*'],
 			filename: 'app.manifest',
-			exclude: ['app.manifest', '*.less']
+			exclude: ['app.manifest']
 		}))
 		.pipe(replace('%5C', '/'))
 		.pipe(gulp.dest('dist'));
