@@ -50,7 +50,7 @@ gulp.task('manifest', function() {
 			timestamp: true,
 			network: ['http://*', 'https://*', '*'],
 			filename: 'app.manifest',
-			exclude: 'app.manifest'
+			exclude: ['app.manifest', '*.less']
 		}))
 		.pipe(replace('%5C', '/'))
 		.pipe(gulp.dest('dist'));
