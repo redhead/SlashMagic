@@ -21,20 +21,26 @@ MainController = ($scope, $rootScope, Character, growler, $timeout, $modal, char
 	$scope.$on '$stateChangeSuccess', ->
 		tab.active = $state.is(tab.state) for tab in $scope.tabs
 
+
+
 	$scope.character = Character.currentCharacter
+
+	$scope.$watch 'character.toPlainObject()', (->
+			console.log $scope.character
+			characterStorage.putLast $scope.character
+		), true
+
 
 	$scope.attributes = Attributes
 	
+
+
 	$scope.$on 'showAttrTooltipRise', (event, attrName) ->
 		$scope.$broadcast('showAttrTooltipFall', attrName)
 
-	$scope.alert = (msg) ->
-		alert msg
-
-	$scope.log = (msg) ->
-		console.log msg
-
 	$timeout (-> $scope.$broadcast('armorChanged')), 50
+
+
 
 	notifyOnline = false
 
@@ -50,6 +56,8 @@ MainController = ($scope, $rootScope, Character, growler, $timeout, $modal, char
 			title: 'Připojení selhalo!'
 			message: 'Používá se lokální úložiště'
 
+
+
 	$scope.createCharacter = ->
 		dialog = $modal.open
 			templateUrl: 'partials/createCharacterForms.html',
@@ -61,6 +69,7 @@ MainController = ($scope, $rootScope, Character, growler, $timeout, $modal, char
 			growler.success
 				title: 'Postava vytvořena'
 				message: "Postava #{newChar.name} vytvořena a uložena"
+
 
 
 	$scope.openLevelUpDialog = ->
