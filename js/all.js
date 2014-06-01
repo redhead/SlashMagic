@@ -2999,16 +2999,14 @@ MainController = function($scope, $rootScope, Character, growler, $timeout, $mod
     return _results;
   });
   $scope.character = Character.currentCharacter;
+  $scope.$watch('character.toPlainObject()', (function() {
+    console.log($scope.character);
+    return characterStorage.putLast($scope.character);
+  }), true);
   $scope.attributes = Attributes;
   $scope.$on('showAttrTooltipRise', function(event, attrName) {
     return $scope.$broadcast('showAttrTooltipFall', attrName);
   });
-  $scope.alert = function(msg) {
-    return alert(msg);
-  };
-  $scope.log = function(msg) {
-    return console.log(msg);
-  };
   $timeout((function() {
     return $scope.$broadcast('armorChanged');
   }), 50);
