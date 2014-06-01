@@ -45,15 +45,15 @@ gulp.task('scripts', function() {
 });
 
 gulp.task('manifest', function() {
-//	gulp.src('dist/**/*')
-//		.pipe(manifest({
-//			timestamp: true,
-//			network: ['http://*', 'https://*', '*'],
-//			filename: 'app.manifest',
-//			exclude: 'app.manifest'
-//		}))
-//		.pipe(replace('%5C', '/'))
-//		.pipe(gulp.dest('dist'));
+	gulp.src('dist/**/*')
+		.pipe(manifest({
+			timestamp: true,
+			network: ['http://*', 'https://*', '*'],
+			filename: 'app.manifest',
+			exclude: 'app.manifest'
+		}))
+		.pipe(replace('%5C', '/'))
+		.pipe(gulp.dest('dist'));
 });
 
 function compileLess() {

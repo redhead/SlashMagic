@@ -3,7 +3,7 @@ module = angular.module 'app', ['ui.bootstrap', 'ui.router', 'localytics.directi
 
 
 module.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
-	$locationProvider.html5Mode(false)
+	$locationProvider.html5Mode(true)
 	$urlRouterProvider.otherwise('/')
 
 	# URL and state configuration
