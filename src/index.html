@@ -1,10 +1,8 @@
 <!doctype html>
-<html ng-app="app">
+<html data-ng-app="app">
 	<head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
 		
 		<script>
 			document.write('<base href="' + window.location +'" />')
@@ -18,36 +16,37 @@
                 padding-bottom: 40px;
             }
         </style>
-        <link rel="stylesheet" href="css/style.css">
-        <link rel="stylesheet" href="css/main.css">
-        <link rel="stylesheet" href="lib/angular-ui/build/angular-ui.min.css">
-        <link rel="stylesheet" href="lib/chosen/chosen.min.css">
+		<link rel="stylesheet" href="css/style.css">
+		<link rel="stylesheet" href="css/main.css">
+		<link rel="stylesheet" href="lib/angular-ui/build/angular-ui.min.css">
+		<link rel="stylesheet" href="lib/chosen/chosen.min.css">
 
-        <script src="lib/jquery/dist/jquery.js"></script>
+		<script src="lib/jquery/dist/jquery.js"></script>
 
-        <script src="lib/bootstrap/dist/js/bootstrap.js"></script>
-        <script src="js/vendor/jquery.bootstrap-growl.min.js"></script>
+		<script src="lib/bootstrap/dist/js/bootstrap.js"></script>
+		<script src="js/vendor/jquery.bootstrap-growl.min.js"></script>
 
-        <script src="lib/angular/angular.js"></script>
-        <script src="lib/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-        <script src="lib/angular-ui-router/release/angular-ui-router.js"></script>
-        <script src="lib/angular-i18n/angular-locale_cs-cz.js"></script>
-		
+		<script src="lib/angular/angular.js"></script>
+		<script src="lib/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+		<script src="lib/angular-ui-router/release/angular-ui-router.js"></script>
+		<script src="lib/angular-i18n/angular-locale_cs-cz.js"></script>
+
 		<script src="lib/chosen/chosen.jquery.min.js"></script>
 		<script src="lib/angular-chosen-localytics/chosen.js"></script>
 
         <script src="lib/json2/cycle.js"></script>
-        <script src="lib/json2/json2.js"></script>
+		<script src="lib/json2/json2.js"></script>
 
-        <script src="js/all.js"></script>
+		<script src="js/all.js"></script>
     </head>
-    <body ng-controller="MainController">
-		<div ng-include="'menu.html'"></div>
+    <body data-ng-controller="MainController">
+		<div data-ng-include="'menu.html'"></div>
+		
+		<div data-ng-include="'attrPopup.html'"></div>
 
-        <div class="container">
-			<div ng-include="'attrPopup.html'"></div>
+        <div class="container" data-ng-show="character !== null">
 
-            <div ng-include="'partials/characterHeader.html'"></div>
+            <div data-ng-include="'partials/characterHeader.html'"></div>
 
 			<div data-ui-view></div>
 			

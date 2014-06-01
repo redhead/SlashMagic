@@ -1,28 +1,9 @@
 
-<div ng-controller="CombatController">
-	<div ng-controller="SelectArmorController" id="selectArmorModal" class="fade modal hide in">
-		<div ng-include="selectArmorController.html"></div>
-	</div>
-
+<div data-ng-controller="CombatController">
 	<div class="row">
 		<div class="col-sm-3 attributes-table">
-			<div attr-row ng-repeat="attr in ['boj', 'utok', 'strelba', 'obrana']"></div>
+			<div attr-row data-ng-repeat="attr in ['boj', 'utok', 'strelba', 'obrana']"></div>
 		</div>
-
-<!--		<div class="col-sm-3">
-			Zbroj: {{armor.protection}} / {{helmet.protection}}
-			<ul class="list-unstyled">
-				<li>
-					{{armor.name}}
-					<a href="#selectArmorModal" class="btn btn-default btn-sm" data-toggle="modal" ng-click="selectArmorType = 'armor'">Vybrat zbroj</a>
-				</li>
-				<li>
-					{{helmet.name}}
-					<a href="#selectArmorModal" class="btn btn-default btn-sm" data-toggle="modal" ng-click="selectArmorType = 'helmet'">Vybrat přilbu</a>
-				</li>
-			</ul>
-		</div>-->
-
 		<div class="col-sm-9">
 			<div data-damage-fatigue-bars data-type="damage"></div>
 		</div>

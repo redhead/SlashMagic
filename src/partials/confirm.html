@@ -3,5 +3,5 @@
 	<p>{{text}}</p>
 </div>
 <div class="modal-footer">
-	<button ng-repeat="button in buttons" class="btn {{button.className || btn-default}}" ng-click="buttonClick(button)">{{button.caption}}</button>
+	<button data-ng-repeat="button in buttons" class="btn {{button.className || btn-default}}" data-ng-click="buttonClick(button)">{{button.caption}}</button>
 </div>

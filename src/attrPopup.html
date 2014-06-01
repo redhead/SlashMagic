@@ -1,20 +1,20 @@
 
-<div id="attr-popup" class="popover fade top in" ng-controller="AttrPopupController">
+<div id="attr-popup" class="popover fade top in" data-ng-controller="AttrPopupController">
 	<div class="arrow"></div>
 	<div class="popover-inner">
 		<div class="popover-title">
 			{{attrName | attrLong}}
 		</div>
-		<div class="popover-content" ng-show="corrections || formula">
+		<div class="popover-content" data-ng-show="corrections || formula">
 			<div class="pagination-centered">
-				<code ng-show="formula" class="pagination-centered">{{attrName}} = {{formula}}</code>
+				<code data-ng-show="formula" class="pagination-centered">{{attrName}} = {{formula}}</code>
 			</div>
 			
-			<div ng-show="corrections">
+			<div data-ng-show="corrections">
 				<small><strong>Opravy:</strong></small>
 				<ul class="list-unstyled">
-					<li ng-repeat="corr in corrections | orderBy:'corr.value'">
-						<span ng-class="{red: corr.value < 0, green: corr.value > 0}">{{corr.value | attr}}</span>
+					<li data-ng-repeat="corr in corrections | orderBy:'corr.value'">
+						<span data-ng-class="{red: corr.value < 0, green: corr.value > 0}">{{corr.value | attr}}</span>
 						<span class="muted">{{corr.cause}}</span>
 					</li>
 				</ul>

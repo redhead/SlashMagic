@@ -1,14 +1,14 @@
 
-<div class="row" ng-controller="SkillController">
-	<div class="skills-column" ng-repeat="type in ['physical', 'psychic', 'combined']">
-		<h4 ng-show="type == 'physical'">Fyzické</h4>
-		<h4 ng-show="type == 'psychic'">Psychické</h4>
-		<h4 ng-show="type == 'combined'">Kombinované</h4>
-		<div ng-repeat="skill in skills[type] | orderBy:'name'" class="skill-row">
+<div class="row" data-ng-controller="SkillController">
+	<div class="skills-column" data-ng-repeat="type in ['physical', 'psychic', 'combined']">
+		<h4 data-ng-show="type == 'physical'">Fyzické</h4>
+		<h4 data-ng-show="type == 'psychic'">Psychické</h4>
+		<h4 data-ng-show="type == 'combined'">Kombinované</h4>
+		<div data-ng-repeat="skill in skills[type] | orderBy:'name'" class="skill-row">
 			<span class="skill-points">
-				<span ng-class="{active: skill.level >= 1}">•</span>
-				<span ng-class="{active: skill.level >= 2}">•</span>
-				<span ng-class="{active: skill.level == 3}">•</span>
+				<span data-ng-class="{active: skill.level >= 1}">•</span>
+				<span data-ng-class="{active: skill.level >= 2}">•</span>
+				<span data-ng-class="{active: skill.level == 3}">•</span>
 			</span>
 			{{skill.name}}
 		</div>

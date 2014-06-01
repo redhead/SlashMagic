@@ -1,26 +1,26 @@
 
-<form ng-controller="NewCharacterAttrsController" name="createForm2" ng-show="part == 1" class="form-horizontal modal-form">
+<form data-ng-controller="NewCharacterAttrsController" name="createForm2" data-ng-show="part == 1" class="form-horizontal modal-form">
 	<div class="modal-body attrs-modal-body">
 		<table>
 			<tr class="divider-2">
 				<td>
 					<table class="table table-condensed table-hover">
-						<tr ng-repeat="attr in getBaseAttrs()" ng-class="{info: isMainAttr(attr)}">
+						<tr data-ng-repeat="attr in getBaseAttrs()" data-ng-class="{info: isMainAttr(attr)}">
 							<td>{{getLongName(attr)}}</td>
 							<td>{{newCharacter.attributes[attr] | attr}}</td>
 							<td>
-								<div class="pull-right" ng-hide="random">
-									<a href ng-click="increase(attr)"><i class="glyphicon glyphicon-chevron-up"></i></a>
-									<a href ng-click="decrease(attr)"><i class="glyphicon glyphicon-chevron-down"></i></a>
+								<div class="pull-right" data-ng-hide="random">
+									<a href data-ng-click="increase(attr)"><i class="glyphicon glyphicon-chevron-up"></i></a>
+									<a href data-ng-click="decrease(attr)"><i class="glyphicon glyphicon-chevron-down"></i></a>
 								</div>
 							</td>
-							<td ng-hide="random">{{remaining[attr]}}</td>
+							<td data-ng-hide="random">{{remaining[attr]}}</td>
 						</tr>
 					</table>
-					<div ng-hide="newCharacter.male">
+					<div data-ng-hide="newCharacter.male">
 						<div class="checkbox">
 							<label for="genderCorrections">
-								<input ng-model="useGenderCorrections" type="checkbox" id="genderCorrections"> Opravy za pohlaví
+								<input data-ng-model="useGenderCorrections" type="checkbox" id="genderCorrections"> Opravy za pohlaví
 							</label>
 						</div>
 					</div>
@@ -28,17 +28,17 @@
 				<td>
 					<div class="center-block">
 						<div class="btn-group">
-							<button ng:model="random" btn-radio="false" class="btn btn-default" ng-click="clearRandom()">Rozhodnutí hráče</button>
-							<button ng:model="random" btn-radio="true" class="btn btn-default" ng-click="makeRandom()">Náhoda</button>
+							<button ng:model="random" btn-radio="false" class="btn btn-default" data-ng-click="clearRandom()">Rozhodnutí hráče</button>
+							<button ng:model="random" btn-radio="true" class="btn btn-default" data-ng-click="makeRandom()">Náhoda</button>
 						</div>
 					</div>
 					<hr>
-					<div ng-show="random" class="center-block">
-						<button class="btn btn-default" ng-click="makeRandom()">
+					<div data-ng-show="random" class="center-block">
+						<button class="btn btn-default" data-ng-click="makeRandom()">
 							<i class="icon-random"></i> Hodit kostkami
 						</button>
 					</div>
-					<div ng-hide="random" class="pagination-centered">
+					<div data-ng-hide="random" class="pagination-centered">
 						<table>
 							<tr>
 								<th>Hlavní body</th>
@@ -57,8 +57,8 @@
 		</table>
 	</div>
 	<div class="modal-footer">
-		<a href="" class="btn btn-default" ng-click="cancel()">Zavřít</a>
-		<button class="btn btn-default" ng-click="goto(0)">Zpět</button>
-		<button class="btn btn-primary" ng-click="goto(2)">Další</button>
+		<a href="" class="btn btn-default" data-ng-click="cancel()">Zavřít</a>
+		<button class="btn btn-default" data-ng-click="goto(0)">Zpět</button>
+		<button class="btn btn-primary" data-ng-click="goto(2)">Další</button>
 	</div>
 </form>

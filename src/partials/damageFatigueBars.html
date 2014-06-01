@@ -1,7 +1,7 @@
 
 <div class="form-inline">
-	<span ng-show="type == 'damage'">Mez zranění:</span>
-	<span ng-show="type == 'fatigue'">Mez únavy:</span>
+	<span data-ng-show="type == 'damage'">Mez zranění:</span>
+	<span data-ng-show="type == 'fatigue'">Mez únavy:</span>
 	{{getLimit(type)}}
 
 	<table class="progress-bars">
@@ -37,17 +37,17 @@
 
 	<div class="row form-horizontal">
 		<div class="col-sm-2 control-label">
-			<label ng-show="type == 'damage'" for="damageSpinner">Zranění:</label>
-			<label ng-show="type == 'fatigue'" for="fatigueSpinner">Únava:</label>
+			<label data-ng-show="type == 'damage'" for="damageSpinner">Zranění:</label>
+			<label data-ng-show="type == 'fatigue'" for="fatigueSpinner">Únava:</label>
 		</div>
 		<div class="input-group col-sm-3">
-			<input id="{{type}}Spinner" type="number" min="0" max="{{getLimit(type) * 3}}" ng-model="character[type]" class="form-control">
+			<input id="{{type}}Spinner" type="number" min="0" max="{{getLimit(type) * 3}}" data-ng-model="character[type]" class="form-control">
 			<span class="input-group-btn">
-				<button type="button" class="btn btn-default" ng-style="{visibility: (character[type] >= getLimit(type) ? 'visible' : 'hidden')}" ng-click="rollPenalty(type)" ng-disabled="!isRollEnabled[type]">Hod na postih</button>
+				<button type="button" class="btn btn-default" data-ng-style="{visibility: (character[type] >= getLimit(type) ? 'visible' : 'hidden')}" data-ng-click="rollPenalty(type)" data-ng-disabled="!isRollEnabled[type]">Hod na postih</button>
 			</span>
 		</div>
-		<div ng-show="character[type] >= getLimit(type)" class="col-sm-2">
-			Postih: <span ng-class="{red: character.penalties[type] < 0}">{{character.penalties[type] | attr}}</span>
+		<div data-ng-show="character[type] >= getLimit(type)" class="col-sm-2">
+			Postih: <span data-ng-class="{red: character.penalties[type] < 0}">{{character.penalties[type] | attr}}</span>
 		</div>
 	</div>
 </div>

@@ -11,7 +11,7 @@
 				<div class="col-sm-8 col-xs-9">Úroveň:</div>
 				<div class="col-sm-4 col-xs-3">
 					{{character.level}}
-					<button class="btn btn-xs btn-success" ng-show="character.experience >= character.getExperienceNeeded()" ng-click="openLevelUpDialog()">
+					<button class="btn btn-xs btn-success" data-ng-show="character.experience >= character.getExperienceNeeded()" data-ng-click="openLevelUpDialog()">
 						<span class="glyphicon glyphicon-chevron-up"></span>
 					</button>
 				</div>
@@ -25,11 +25,11 @@
 			<div class="row character-experienceProgress">
 				<div class="col-sm-8 col-xs-9">
 					<div class="progress">
-						<div class="progress-bar" ng-style="{width: (character.experience*100/character.getExperienceNeeded()) + '%'}"></div>
+						<div class="progress-bar" data-ng-style="{width: (character.experience*100/character.getExperienceNeeded()) + '%'}"></div>
 					</div>
 				</div>
 				<div class="col-sm-4 col-xs-3">
-					<button class="btn btn-default btn-xs" ng-click="character.experience = character.experience + 1"><span class="glyphicon glyphicon-plus"></span></button>
+					<button class="btn btn-default btn-xs" data-ng-click="character.experience = character.experience + 1"><span class="glyphicon glyphicon-plus"></span></button>
 				</div>
 			</div>
 		</div>

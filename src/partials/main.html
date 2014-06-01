@@ -1,6 +1,6 @@
 
 <div data-tabset class="character-tabs">
-	<div data-tab ng-repeat="t in tabs" data-heading="{{t.heading}}" select="go(t.state)" active="t.active"></div>
+	<div data-tab data-ng-repeat="t in tabs" data-heading="{{t.heading}}" select="go(t.state)" active="t.active"></div>
 </div>
 
 <div data-ui-view></div>

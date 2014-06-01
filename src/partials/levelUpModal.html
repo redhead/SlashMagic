@@ -10,14 +10,14 @@
 		<div class="form-group">
 			<label class="control-label col-sm-4">Hlavní:</label>
 			<div class="btn-group col-sm-8">
-				<button class="btn btn-default" ng-repeat="main in mains" ng-model="levelUp.main" btn-radio="main.attr">{{main.label}}</button>
+				<button class="btn btn-default" data-ng-repeat="main in mains" data-ng-model="levelUp.main" btn-radio="main.attr">{{main.label}}</button>
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label class="control-label col-sm-4">Vedlejší</label>
 			<div class="btn-group-vertical col-sm-3">
-				<button class="btn btn-default" ng-repeat="secondary in secondaries" ng-model="levelUp.secondary" btn-radio="secondary.attr" ng-disabled="secondary.used">{{secondary.label}}</button>
+				<button class="btn btn-default" data-ng-repeat="secondary in secondaries" data-ng-model="levelUp.secondary" btn-radio="secondary.attr" data-ng-disabled="secondary.used">{{secondary.label}}</button>
 			</div>
 		</div>
 		
@@ -26,15 +26,15 @@
 		
 		<div class="form-group">
 			<div class="col-sm-6">
-				<select ng-model="levelUp.skills[0]" class="form-control">
+				<select data-ng-model="levelUp.skills[0]" class="form-control">
 					<option value="">Vyberte</option>
-					<option ng-repeat="skill in skillOptions[0]" ng-disabled="skill.disabled" value="{{skill.name}}">{{skill.label}}</option>
+					<option data-ng-repeat="skill in skillOptions[0]" data-ng-disabled="skill.disabled" value="{{skill.name}}">{{skill.label}}</option>
 				</select>
 			</div>
 			<div class="col-sm-6">
-				<select ng-model="levelUp.skills[1]" class="form-control">
+				<select data-ng-model="levelUp.skills[1]" class="form-control">
 					<option value="">Vyberte</option>
-					<option ng-repeat="skill in skillOptions[1]" ng-disabled="skill.disabled" value="{{skill.name}}">{{skill.label}}</option>
+					<option data-ng-repeat="skill in skillOptions[1]" data-ng-disabled="skill.disabled" value="{{skill.name}}">{{skill.label}}</option>
 				</select>
 			</div>
 		</div>
@@ -43,6 +43,6 @@
 </div>
 
 <div class="modal-footer">
-	<button class="btn btn-success" ng-click="ok()" ng-show="isOk()">Zvýšit úroveň</button>
-	<button class="btn btn-default" ng-click="cancel()">Zrušit</button>
+	<button class="btn btn-success" data-ng-click="ok()" data-ng-show="isOk()">Zvýšit úroveň</button>
+	<button class="btn btn-default" data-ng-click="cancel()">Zrušit</button>
 </div>
